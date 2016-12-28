@@ -1,0 +1,18 @@
+Manifest-Version: 1.0
+Bnd-LastModified: 1482943323165
+Build-Jdk: 1.8.0_102
+Built-By: Saa
+Bundle-ManifestVersion: 2
+Bundle-Name: protege-explanation-interface
+Bundle-SymbolicName: not.org.saa.protege.explanation.joint;singleton:=tr
+ ue
+Bundle-Vendor: Saa
+Bundle-Version: 0.0.1.SNAPSHOT
+Created-By: Apache Maven Bundle Plugin
+Export-Package: not.org.saa.protege.explanation.joint;uses:="org.protege
+ .editor.owl.ui.explanation,org.semanticweb.owlapi.model";version="0.0.1
+ "
+Import-Package: org.protege.editor.owl.ui.explanation;version="[5.0,6)",
+ org.semanticweb.owlapi.model;version="[4.2,5)"
+Require-Capability: osgi.ee;filter:="(&(osgi.ee=JavaSE)(version=1.8))"
+Tool: Bnd-3.0.0.201509101326
