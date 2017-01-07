@@ -1,8 +1,9 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>protege-explanation-interface</groupId>
-  <artifactId>protege-explanation-interface</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>not.org.saa</groupId>
+	<artifactId>protege-explanation-interface</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
 	<packaging>bundle</packaging>
 
 	<dependencies>
@@ -49,8 +50,19 @@
 			<scope>provided</scope>
 		</dependency>
 
+		<dependency>
+			<groupId>net.sourceforge.owlapi</groupId>
+			<artifactId>owlexplanation</artifactId>
+			<version>2.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>net.sourceforge.owlapi</groupId>
+			<artifactId>telemetry</artifactId>
+			<version>2.0.0</version>
+		</dependency>
+
 	</dependencies>
-	
+
 	<build>
 		<sourceDirectory>src</sourceDirectory>
 		<resources>
@@ -81,7 +93,11 @@
 					<instructions>
 						<Bundle-SymbolicName>not.org.saa.protege.explanation.joint;singleton:=true</Bundle-SymbolicName>
 						<Bundle-Vendor>Saa</Bundle-Vendor>
-						<Export-Package>not.org.saa.protege.explanation.joint</Export-Package>
+						<Export-Package>not.org.saa.protege.explanation.joint.service</Export-Package>
+						<Embed-Dependency>*;scope=!provided;scope=compile|runtime;inline=false</Embed-Dependency>
+						<Embed-Transitive>true</Embed-Transitive>
+						<Embed-Directory>target/dependency</Embed-Directory>
+						<Import-Package>*</Import-Package>
 					</instructions>
 					<executions>
 						<execution>
@@ -96,4 +112,35 @@
 			</plugin>
 		</plugins>
 	</build>
+	
+	
+	<profiles>
+		<profile>
+			<!-- with this profile put META-INF/MANIFEST.MF, plugin.xml, and embed 
+				dependencies so that Eclipse/PDE can find them; to use in Eclipse right click 
+				on the project > Configure > Convert to Plug-in Projects... -->
+			<id>eclipse</id>
+			<build>
+				<plugins>
+					<plugin>
+						<artifactId>maven-dependency-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>copy-dependencies</id>
+								<phase>package</phase>
+								<goals>
+									<goal>copy-dependencies</goal>
+								</goals>
+							</execution>
+						</executions>
+						<configuration>
+							<excludeScope>provided</excludeScope>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+
+
 </project>
