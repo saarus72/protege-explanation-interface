@@ -3,8 +3,6 @@ package not.org.saa.protege.explanation.joint;
 import java.awt.*;
 import org.protege.editor.owl.ui.explanation.ExplanationResult;
 
-import not.org.saa.protege.explanation.joint.service.LogicService;
-
 public class PresentationPanelResult extends ExplanationResult {
 
 	private PresentationPanel presentationPanel;

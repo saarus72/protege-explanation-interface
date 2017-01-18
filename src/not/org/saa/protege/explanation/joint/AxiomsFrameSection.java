@@ -1,5 +1,6 @@
 package not.org.saa.protege.explanation.joint;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
@@ -51,6 +52,7 @@ public class AxiomsFrameSection extends AbstractOWLFrameSection<Explanation<OWLA
 			return;
 		}
 		filled = true;
+
 		AxiomsFormattingManager formattingManager = AxiomsFormattingManager.getManager();
 		Explanation<OWLAxiom> expl = getRootObject();
 		List<OWLAxiom> formatting = formattingManager.getOrdering(expl);

@@ -5,7 +5,6 @@ import java.util.Collection;
 
 import org.protege.editor.core.Disposable;
 import org.protege.editor.owl.OWLEditorKit;
-import org.semanticweb.owlapi.model.OWLAxiom;
 
 import not.org.saa.protege.explanation.joint.service.LogicPlugin;
 import not.org.saa.protege.explanation.joint.service.LogicPluginLoader;

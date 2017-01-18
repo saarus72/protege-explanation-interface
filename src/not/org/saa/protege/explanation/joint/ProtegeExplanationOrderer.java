@@ -74,10 +74,6 @@ import org.semanticweb.owlapi.model.OWLSymmetricObjectPropertyAxiom;
 import org.semanticweb.owlapi.model.OWLTransitiveObjectPropertyAxiom;
 import org.semanticweb.owlapi.model.SWRLRule;
 
-//import uk.ac.manchester.cs.owl.explanation.ProtegeExplanationOrderer.AxiomMapBuilder;
-//import uk.ac.manchester.cs.owl.explanation.ProtegeExplanationOrderer.OWLAxiomTreeComparator;
-//import uk.ac.manchester.cs.owl.explanation.ProtegeExplanationOrderer.PropertiesFirstComparator;
-//import uk.ac.manchester.cs.owl.explanation.ProtegeExplanationOrderer.SeedExtractor;
 import uk.ac.manchester.cs.owl.explanation.ordering.EntailedAxiomTree;
 import uk.ac.manchester.cs.owl.explanation.ordering.ExplanationOrderer;
 import uk.ac.manchester.cs.owl.explanation.ordering.ExplanationTree;

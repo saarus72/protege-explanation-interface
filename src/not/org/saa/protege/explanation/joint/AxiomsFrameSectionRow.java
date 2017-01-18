@@ -14,68 +14,67 @@ import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLObject;
 import org.semanticweb.owlapi.model.OWLOntology;
 
-public class AxiomsFrameSectionRow extends AbstractOWLFrameSectionRow<Explanation<OWLAxiom>, OWLAxiom, OWLAxiom>{
+public class AxiomsFrameSectionRow extends AbstractOWLFrameSectionRow<Explanation<OWLAxiom>, OWLAxiom, OWLAxiom> {
 
-    private int depth;
-    
+	private int depth;
 
-    public AxiomsFrameSectionRow(OWLEditorKit owlEditorKit, OWLFrameSection<Explanation<OWLAxiom>, OWLAxiom, OWLAxiom> section, Explanation<OWLAxiom> rootObject, OWLAxiom axiom, int depth) {
-        super(owlEditorKit, section, getOntologyForAxiom(owlEditorKit, axiom), rootObject, axiom);
-        this.depth = depth;
-    }
+	public AxiomsFrameSectionRow(OWLEditorKit owlEditorKit,
+			OWLFrameSection<Explanation<OWLAxiom>, OWLAxiom, OWLAxiom> section, Explanation<OWLAxiom> rootObject,
+			OWLAxiom axiom, int depth) {
+		super(owlEditorKit, section, getOntologyForAxiom(owlEditorKit, axiom), rootObject, axiom);
+		this.depth = depth;
+	}
 
-    public int getDepth() {
-        return depth;
-    }
+	public int getDepth() {
+		return depth;
+	}
 
-    private static OWLOntology getOntologyForAxiom(OWLEditorKit editorKit, OWLAxiom axiom) {
-        return null;
-    }
+	private static OWLOntology getOntologyForAxiom(OWLEditorKit editorKit, OWLAxiom axiom) {
+		return null;
+	}
 
-    @Override
-    public String getRendering() {
-        String rendering =  super.getRendering().replaceAll("\\s", " ");
-        StringBuilder sb = new StringBuilder();
-        for(int i = 0; i < depth; i++) {
-            sb.append("        ");
-        }
-        sb.append(rendering);
-        return sb.toString();
-    }
+	@Override
+	public String getRendering() {
+		String rendering = super.getRendering().replaceAll("\\s", " ");
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < depth; i++) {
+			sb.append("        ");
+		}
+		sb.append(rendering);
+		return sb.toString();
+	}
 
-    @Override
-    public List<MListButton> getAdditionalButtons() {
-        return Collections.emptyList();
-    }
+	@Override
+	public List<MListButton> getAdditionalButtons() {
+		return Collections.emptyList();
+	}
 
-    @Override
-    protected OWLObjectEditor<OWLAxiom> getObjectEditor() {
-        return null;
-    }
+	@Override
+	protected OWLObjectEditor<OWLAxiom> getObjectEditor() {
+		return null;
+	}
 
-    @Override
-    protected OWLAxiom createAxiom(OWLAxiom editedObject) {
-        return null;
-    }
+	@Override
+	protected OWLAxiom createAxiom(OWLAxiom editedObject) {
+		return null;
+	}
 
-    public List<? extends OWLObject> getManipulatableObjects() {
-        return Arrays.asList(getAxiom());
-    }
+	public List<? extends OWLObject> getManipulatableObjects() {
+		return Arrays.asList(getAxiom());
+	}
 
-    @Override
-    public boolean isEditable() {
-        return true;
-    }
+	@Override
+	public boolean isEditable() {
+		return true;
+	}
 
-    @Override
-    public boolean isDeleteable() {
-        return true;
-    }
+	@Override
+	public boolean isDeleteable() {
+		return true;
+	}
 
-    @Override
-    public boolean isInferred() {
-        return false;
-    }
-
-
+	@Override
+	public boolean isInferred() {
+		return false;
+	}
 }

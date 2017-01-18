@@ -7,8 +7,8 @@ import org.semanticweb.owlapi.model.OWLAxiom;
 
 public class AxiomsFrame extends AbstractOWLFrame<Explanation<OWLAxiom>> {
 
-    public AxiomsFrame(OWLEditorKit editorKit) {
-        super(editorKit.getOWLModelManager().getOWLOntologyManager());
-        addSection(new AxiomsFrameSection(editorKit, this));
-    }
+	public AxiomsFrame(OWLEditorKit editorKit) {
+		super(editorKit.getOWLModelManager().getOWLOntologyManager());
+		addSection(new AxiomsFrameSection(editorKit, this));
+	}
 }

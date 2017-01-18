@@ -16,12 +16,18 @@ public class PresentationManager {
 	private final OWLAxiom entailment;
 	private final LogicServiceManager manager;
 	private final Collection<LogicService> services;
+	private final PresentationSettings presentationSettings;
 
 	public PresentationManager(LogicServiceManager manager, OWLAxiom entailment) {
 		this.entailment = entailment;
 		this.manager = manager;
 		services = manager.getServices();
+		presentationSettings = new PresentationSettings();
 	}
+	
+    public PresentationSettings getPresentationSettings() {
+        return presentationSettings;
+    }
 
 	public OWLAxiom getEntailment() {
 		return entailment;
