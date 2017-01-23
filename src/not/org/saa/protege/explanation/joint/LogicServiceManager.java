@@ -32,7 +32,7 @@ public class LogicServiceManager implements Disposable {
 			service.dispose();
 		}
 	}
-	
+
 	public OWLEditorKit getOWLEditorKit() {
 		return kit;
 	}

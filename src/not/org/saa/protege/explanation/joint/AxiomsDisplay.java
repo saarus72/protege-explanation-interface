@@ -17,15 +17,14 @@ public class AxiomsDisplay extends JPanel implements AxiomSelectionListener, Dis
 	private Explanation<OWLAxiom> explanation;
 	private AxiomsFrame frame;
 	private final AxiomsFrameList frameList;
-	private PresentationManager manager;
 	private AxiomSelectionModel axiomSelectionModel;
 	private boolean transmittingSelectionToModel = false;
 
-	public AxiomsDisplay(PresentationManager manager, AxiomSelectionModel selectionModel, Explanation<OWLAxiom> explanation) {
-		this.manager = manager;
+	public AxiomsDisplay(PresentationManager manager, AxiomSelectionModel selectionModel,
+			Explanation<OWLAxiom> explanation) {
 		OWLEditorKit editorKit = manager.getOWLEditorKit();
 		this.axiomSelectionModel = selectionModel;
-        this.explanation = explanation;
+		this.explanation = explanation;
 		frame = new AxiomsFrame(editorKit);
 		setLayout(new BorderLayout());
 		frameList = new AxiomsFrameList(selectionModel, manager, frame);

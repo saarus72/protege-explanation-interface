@@ -23,6 +23,7 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.JComponent;
+import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
@@ -33,6 +34,7 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.Timer;
 
 import org.protege.editor.core.Disposable;
+import org.protege.editor.core.ProtegeManager;
 import org.protege.editor.owl.OWLEditorKit;
 import org.protege.editor.owl.model.event.OWLModelManagerChangeEvent;
 import org.protege.editor.owl.model.event.OWLModelManagerListener;
@@ -59,7 +61,8 @@ public class PresentationPanel extends JPanel implements Disposable, OWLModelMan
 	private static final Logger logger = LoggerFactory.getLogger(PresentationPanel.class);
 
 	public PresentationPanel(LogicServiceManager manager, OWLAxiom entailment) {
-		this(new PresentationManager(manager, entailment));
+		this(new PresentationManager(ProtegeManager.getInstance().getFrame(manager.getOWLEditorKit().getWorkspace()),
+				manager, entailment));
 	}
 
 	public PresentationPanel(PresentationManager manager) {
@@ -105,31 +108,6 @@ public class PresentationPanel extends JPanel implements Disposable, OWLModelMan
 		JComponent headerPanel = new JPanel(layout);
 
 		final PresentationSettings presentationSettings = manager.getPresentationSettings();
-
-		// JRadioButton regularButton = new JRadioButton(new
-		// AbstractAction("Show regular justifications") {
-		// public void actionPerformed(ActionEvent e) {
-		// workbenchSettings.setJustificationType(JustificationType.REGULAR);
-		// refill();
-		// }
-		// });
-		// regularButton.setSelected(true);
-		// headerPanel.add(regularButton, new GridBagConstraints(0, 0, 1, 1,
-		// 0.0, 0.0, GridBagConstraints.NORTHEAST,
-		// GridBagConstraints.HORIZONTAL, new Insets(0, 0, 2, 30), 0, 0));
-		// JRadioButton laconicButton = new JRadioButton(new
-		// AbstractAction("Show laconic justifications") {
-		// public void actionPerformed(ActionEvent e) {
-		// workbenchSettings.setJustificationType(JustificationType.LACONIC);
-		// refill();
-		// }
-		// });
-		// headerPanel.add(laconicButton, new GridBagConstraints(0, 1, 1, 1,
-		// 0.0, 0.0, GridBagConstraints.NORTHEAST,
-		// GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 30), 0, 0));
-		// ButtonGroup bg = new ButtonGroup();
-		// bg.add(regularButton);
-		// bg.add(laconicButton);
 
 		SpinnerModel spinnerModel = new SpinnerNumberModel(presentationSettings.getLimit(), 1, 900, 1);
 		maxExplanationsSelector.setModel(spinnerModel);
@@ -185,14 +163,13 @@ public class PresentationPanel extends JPanel implements Disposable, OWLModelMan
 		return new Dimension(10, 10);
 	}
 
-	// public void explanationLimitChanged(JustificationManager
-	// explanationManager) {
-	// maxExplanationsSelector.setEnabled(!workbenchManager.getWorkbenchSettings().isFindAllExplanations());
-	// selectionChanged();
-	// }
-	//
-	// public void explanationsComputed(OWLAxiom entailment) {
-	// }
+	public void explanationLimitChanged(PresentationManager presentationManager) {
+		maxExplanationsSelector.setEnabled(!presentationManager.getPresentationSettings().isFindAllExplanations());
+		selectionChanged();
+	}
+
+	public void explanationsComputed(OWLAxiom entailment) {
+	}
 
 	private class HolderPanel extends JPanel implements Scrollable {
 
@@ -250,8 +227,10 @@ public class PresentationPanel extends JPanel implements Disposable, OWLModelMan
 		}
 	}
 
-	protected List<Explanation<OWLAxiom>> getOrderedExplanations(List<Explanation<OWLAxiom>> explanations) {
-		Collections.sort(explanations, new Comparator<Explanation<OWLAxiom>>() {
+	protected List<Explanation<OWLAxiom>> getOrderedExplanations(Set<Explanation<OWLAxiom>> explanations) {
+		List<Explanation<OWLAxiom>> orderedExplanations = new ArrayList<>();
+		orderedExplanations.addAll(explanations);
+		Collections.sort(orderedExplanations, new Comparator<Explanation<OWLAxiom>>() {
 			public int compare(Explanation<OWLAxiom> o1, Explanation<OWLAxiom> o2) {
 				int diff = getAxiomTypes(o1).size() - getAxiomTypes(o2).size();
 				if (diff != 0) {
@@ -264,7 +243,7 @@ public class PresentationPanel extends JPanel implements Disposable, OWLModelMan
 				return o1.getSize() - o2.getSize();
 			}
 		});
-		return explanations;
+		return orderedExplanations;
 	}
 
 	private Set<AxiomType<?>> getAxiomTypes(Explanation<OWLAxiom> explanation) {

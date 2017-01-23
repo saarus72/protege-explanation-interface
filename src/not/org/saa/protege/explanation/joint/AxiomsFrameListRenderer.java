@@ -7,16 +7,14 @@ import org.protege.editor.owl.ui.framelist.OWLFrameListRenderer;
 import org.semanticweb.owlapi.model.OWLObject;
 
 public class AxiomsFrameListRenderer extends OWLFrameListRenderer {
-    public AxiomsFrameListRenderer(OWLEditorKit owlEditorKit) {
-        super(owlEditorKit);
-        setHighlightUnsatisfiableClasses(false);
-        setHighlightUnsatisfiableProperties(false);
-    }
+	public AxiomsFrameListRenderer(OWLEditorKit owlEditorKit) {
+		super(owlEditorKit);
+		setHighlightUnsatisfiableClasses(false);
+		setHighlightUnsatisfiableProperties(false);
+	}
 
-
-
-    @Override
-    protected OWLObject getIconObject(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-        return null;
-    }
+	@Override
+	protected OWLObject getIconObject(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+		return null;
+	}
 }
