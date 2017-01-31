@@ -1,6 +1,5 @@
 package not.org.saa.protege.explanation.joint;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -14,17 +13,16 @@ import javax.swing.*;
 import org.protege.editor.core.log.LogBanner;
 import org.protege.editor.owl.OWLEditorKit;
 import org.semanticweb.owlapi.model.OWLAxiom;
-import org.semanticweb.owlapi.model.OWLOntology;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Marker;
 import org.slf4j.MarkerFactory;
 import org.semanticweb.owl.explanation.api.Explanation;
-import org.semanticweb.owl.explanation.api.ExplanationGenerator;
 import org.semanticweb.owl.explanation.api.ExplanationGeneratorInterruptedException;
 
-import not.org.saa.protege.explanation.joint.service.AxiomsProgressMonitor;
-import not.org.saa.protege.explanation.joint.service.LogicService;
+import not.org.saa.protege.explanation.joint.service.JustificationComputationListener;
+import not.org.saa.protege.explanation.joint.service.JustificationComputation;
+import not.org.saa.protege.explanation.joint.service.JustificationComputationService;
 
 public class PresentationManager {
 
@@ -32,20 +30,21 @@ public class PresentationManager {
 	public static final Marker MARKER = MarkerFactory.getMarker("Explanation");
 
 	private final OWLAxiom entailment;
-	private final LogicServiceManager manager;
-	private final Collection<LogicService> services;
+	private final JustificationComputationServiceManager manager;
+	private final Collection<JustificationComputationService> services;
 	private final PresentationSettings presentationSettings;
 	private AxiomsCache axiomsCache;
-	private ExplanationGeneratorProgressDialog progressDialog;
 	private ExecutorService executorService;
+	private JFrame parentWindow;
 
-	public PresentationManager(JFrame parentWindow, LogicServiceManager manager, OWLAxiom entailment) {
+	public PresentationManager(JFrame parentWindow, JustificationComputationServiceManager manager,
+			OWLAxiom entailment) {
 		this.entailment = entailment;
 		this.manager = manager;
+		this.parentWindow = parentWindow;
 		services = manager.getServices();
 		presentationSettings = new PresentationSettings();
 		axiomsCache = new AxiomsCache();
-		progressDialog = new ExplanationGeneratorProgressDialog(parentWindow);
 		executorService = Executors.newSingleThreadExecutor();
 	}
 
@@ -74,7 +73,12 @@ public class PresentationManager {
 			return null;
 		logger.info(LogBanner.start("Computing Explanations"));
 		logger.info(MARKER, "Computing explanations for {}", entailment);
-		ExplanationGeneratorCallable callable = new ExplanationGeneratorCallable(entailment, services.iterator().next(),
+		JustificationComputationService logic = services.iterator().next();
+		JustificationComputation computation = logic.creareComputation(entailment);
+		ExplanationGeneratorProgressDialog progressDialog = new ExplanationGeneratorProgressDialog(parentWindow,
+				computation);
+
+		ExplanationGeneratorCallable callable = new ExplanationGeneratorCallable(entailment, computation,
 				progressDialog);
 		try {
 			executorService.submit(callable);
@@ -112,7 +116,8 @@ public class PresentationManager {
 		return manager.getOWLEditorKit();
 	}
 
-	private static class ExplanationGeneratorCallable implements Callable<Set<Explanation<OWLAxiom>>>, AxiomsProgressMonitor<OWLAxiom> {
+	private class ExplanationGeneratorCallable
+			implements Callable<Set<Explanation<OWLAxiom>>>, JustificationComputationListener {
 
 		private final OWLAxiom entailment;
 
@@ -120,13 +125,14 @@ public class PresentationManager {
 
 		private final ExplanationGeneratorProgressDialog progressDialog;
 
-		private final LogicService logic;
+		private final JustificationComputation computation;
 
-		private ExplanationGeneratorCallable(OWLAxiom entailment, LogicService logic,
+		private ExplanationGeneratorCallable(OWLAxiom entailment, JustificationComputation computation,
 				ExplanationGeneratorProgressDialog progressDialog) {
 			this.entailment = entailment;
 			this.progressDialog = progressDialog;
-			this.logic = logic;
+			this.computation = computation;
+			computation.addComputationListener(this);
 		}
 
 		/**
@@ -140,21 +146,17 @@ public class PresentationManager {
 			found = new HashSet<>();
 			progressDialog.reset();
 			try {
-				/*found = */logic.startComputation(entailment, this);
+				computation.startComputation();
 			} finally {
 				SwingUtilities.invokeLater(() -> progressDialog.setVisible(false));
 			}
 			return found;
 		}
 
-		public void foundExplanation(List<OWLAxiom> explanation) {
+		@Override
+		public void foundJustification(List<OWLAxiom> justification) {
+			found.add(new Explanation<OWLAxiom>(entailment, new HashSet<>(justification)));
 			progressDialog.setExplanationCount(found.size());
-			found.add(new Explanation<OWLAxiom>(entailment, new HashSet<>(explanation)));
-		}
-
-		public boolean isCancelled() {
-			return progressDialog.isCancelled();
 		}
 	}
-
 }

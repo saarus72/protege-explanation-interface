@@ -13,11 +13,14 @@ import org.semanticweb.owl.explanation.api.ExplanationGenerator;
 import org.semanticweb.owl.explanation.api.ExplanationProgressMonitor;
 import org.semanticweb.owlapi.model.OWLAxiom;
 
-public class ExplanationGeneratorProgressDialog extends JDialog {
-	private AxiomsProgressPanel panel = new AxiomsProgressPanel();
+import not.org.saa.protege.explanation.joint.service.JustificationComputation;
 
-	public ExplanationGeneratorProgressDialog(Frame owner) {
+public class ExplanationGeneratorProgressDialog extends JDialog {
+	private AxiomsProgressPanel panel;
+
+	public ExplanationGeneratorProgressDialog(Frame owner, JustificationComputation computation) {
 		super(owner, "Computing explanations", true);
+		panel = new AxiomsProgressPanel(computation);
 		setContentPane(panel);
 		pack();
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -33,9 +36,5 @@ public class ExplanationGeneratorProgressDialog extends JDialog {
 
 	public void setExplanationCount(int count) {
 		panel.setExplanationCount(count);
-	}
-
-	public boolean isCancelled() {
-		return panel.isCancelled();
 	}
 }

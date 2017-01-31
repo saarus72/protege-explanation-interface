@@ -5,21 +5,21 @@ import org.protege.editor.owl.ui.explanation.ExplanationResult;
 import org.protege.editor.owl.ui.explanation.ExplanationService;
 import org.semanticweb.owlapi.model.OWLAxiom;
 
-import not.org.saa.protege.explanation.joint.service.LogicService;
+import not.org.saa.protege.explanation.joint.service.JustificationComputationService;
 
 public class PresentationService extends ExplanationService {
 
-	private LogicServiceManager manager;
+	private JustificationComputationServiceManager manager;
 
 	@Override
 	public void initialise() throws Exception {
 		OWLEditorKit kit = getOWLEditorKit();
-		manager = new LogicServiceManager(kit);
+		manager = new JustificationComputationServiceManager(kit);
 	}
 
 	@Override
 	public boolean hasExplanation(OWLAxiom axiom) {
-		for (LogicService service : manager.getServices())
+		for (JustificationComputationService service : manager.getServices())
 			if (service.hasAxioms(axiom))
 				return true;
 		return false;

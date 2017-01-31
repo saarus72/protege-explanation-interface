@@ -60,7 +60,7 @@ public class PresentationPanel extends JPanel implements Disposable, OWLModelMan
 	private AxiomSelectionModelImpl selectionModel;
 	private static final Logger logger = LoggerFactory.getLogger(PresentationPanel.class);
 
-	public PresentationPanel(LogicServiceManager manager, OWLAxiom entailment) {
+	public PresentationPanel(JustificationComputationServiceManager manager, OWLAxiom entailment) {
 		this(new PresentationManager(ProtegeManager.getInstance().getFrame(manager.getOWLEditorKit().getWorkspace()),
 				manager, entailment));
 	}

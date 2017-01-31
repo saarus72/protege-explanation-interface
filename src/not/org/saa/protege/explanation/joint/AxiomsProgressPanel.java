@@ -14,6 +14,8 @@ import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.SwingUtilities;
 
+import not.org.saa.protege.explanation.joint.service.JustificationComputation;
+
 public class AxiomsProgressPanel extends JPanel {
 
 	private JLabel messageLabel;
@@ -22,13 +24,15 @@ public class AxiomsProgressPanel extends JPanel {
 
 	private static final String MESSAGE = "Computing explanations. Found ";
 
-	private boolean cancelled = false;
 	private Action cancelAction;
+	
+	private JustificationComputation computation;
 
 	/**
 	 * Creates a new <code>JPanel</code> with a double buffer and a flow layout.
 	 */
-	public AxiomsProgressPanel() {
+	public AxiomsProgressPanel(JustificationComputation computation) {
+		this.computation = computation;		
 		setLayout(new BorderLayout(12, 12));
 		setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
 		setPreferredSize(new Dimension(400, 100));
@@ -41,7 +45,8 @@ public class AxiomsProgressPanel extends JPanel {
 		progressPanel.add(progressBar, BorderLayout.SOUTH);
 		cancelAction = new AbstractAction("Stop searching") {
 			public void actionPerformed(ActionEvent e) {
-				cancelled = true;
+				//cancelled = true;
+				computation.interruptComputation();
 				setEnabled(false);
 			}
 		};
@@ -51,7 +56,6 @@ public class AxiomsProgressPanel extends JPanel {
 	}
 
 	public void reset() {
-		cancelled = false;
 		numberFound = 0;
 		cancelAction.setEnabled(true);
 	}
@@ -64,9 +68,5 @@ public class AxiomsProgressPanel extends JPanel {
 		} else {
 			SwingUtilities.invokeLater(runnable);
 		}
-	}
-
-	public boolean isCancelled() {
-		return cancelled;
 	}
 }

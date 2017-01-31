@@ -4,7 +4,7 @@ import org.eclipse.core.runtime.IExtension;
 import org.protege.editor.core.plugin.AbstractProtegePlugin;
 import org.protege.editor.owl.OWLEditorKit;
 
-public class LogicPlugin extends AbstractProtegePlugin<LogicService> {
+public class LogicPlugin extends AbstractProtegePlugin<JustificationComputationService> {
 	public static final String KEY = "not.org.saa.protege.explanation.joint";
 	public static final String ID = "service";
 	public static final String NAME = "name";
@@ -21,7 +21,8 @@ public class LogicPlugin extends AbstractProtegePlugin<LogicService> {
 	}
 
 	@Override
-	public LogicService newInstance() throws ClassNotFoundException, IllegalAccessException, InstantiationException {
+	public JustificationComputationService newInstance()
+			throws ClassNotFoundException, IllegalAccessException, InstantiationException {
 		return super.newInstance().setup(kit);
 	}
 }
