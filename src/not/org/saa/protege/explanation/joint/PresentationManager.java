@@ -154,7 +154,7 @@ public class PresentationManager {
 		}
 
 		@Override
-		public void foundJustification(List<OWLAxiom> justification) {
+		public void foundJustification(Collection<OWLAxiom> justification) {
 			found.add(new Explanation<OWLAxiom>(entailment, new HashSet<>(justification)));
 			progressDialog.setExplanationCount(found.size());
 		}
