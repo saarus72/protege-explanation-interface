@@ -21,23 +21,24 @@ import org.semanticweb.owl.explanation.api.Explanation;
 import org.semanticweb.owl.explanation.api.ExplanationGeneratorInterruptedException;
 
 import not.org.saa.protege.explanation.joint.service.JustificationComputationListener;
+import not.org.saa.protege.explanation.joint.service.ComputationService;
 import not.org.saa.protege.explanation.joint.service.JustificationComputation;
 import not.org.saa.protege.explanation.joint.service.JustificationComputationService;
 
-public class PresentationManager {
+public class PresentationManager<T extends ComputationService> {
 
 	private static final Logger logger = LoggerFactory.getLogger(PresentationManager.class);
 	public static final Marker MARKER = MarkerFactory.getMarker("Explanation");
 
 	private final OWLAxiom entailment;
-	private final JustificationComputationServiceManager manager;
-	private final Collection<JustificationComputationService> services;
+	private final JustificationComputationServiceManager<T> manager;
+	private final Collection<T> services;
 	private final PresentationSettings presentationSettings;
 	private AxiomsCache axiomsCache;
 	private ExecutorService executorService;
 	private JFrame parentWindow;
 
-	public PresentationManager(JFrame parentWindow, JustificationComputationServiceManager manager,
+	public PresentationManager(JFrame parentWindow, JustificationComputationServiceManager<T> manager,
 			OWLAxiom entailment) {
 		this.entailment = entailment;
 		this.manager = manager;
@@ -73,7 +74,7 @@ public class PresentationManager {
 			return null;
 		logger.info(LogBanner.start("Computing Explanations"));
 		logger.info(MARKER, "Computing explanations for {}", entailment);
-		JustificationComputationService logic = services.iterator().next();
+		ComputationService logic = services.iterator().next();
 		JustificationComputation computation = logic.creareComputation(entailment);
 		ExplanationGeneratorProgressDialog progressDialog = new ExplanationGeneratorProgressDialog(parentWindow,
 				computation);

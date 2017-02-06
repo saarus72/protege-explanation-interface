@@ -47,11 +47,13 @@ import org.semanticweb.owlapi.model.OWLClassExpression;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class PresentationPanel extends JPanel implements Disposable, OWLModelManagerListener,
+import not.org.saa.protege.explanation.joint.service.ComputationService;
+
+public class PresentationPanel<T extends ComputationService> extends JPanel implements Disposable, OWLModelManagerListener,
 		EntailmentSelectionListener, AxiomSelectionModel, ExplanationManagerListener {
 
 	private final OWLEditorKit kit;
-	private final PresentationManager manager;
+	private final PresentationManager<T> manager;
 	private JComponent explanationDisplayHolder;
 	private JScrollPane scrollPane;
 	private Collection<AxiomsDisplay> panels;
@@ -60,12 +62,12 @@ public class PresentationPanel extends JPanel implements Disposable, OWLModelMan
 	private AxiomSelectionModelImpl selectionModel;
 	private static final Logger logger = LoggerFactory.getLogger(PresentationPanel.class);
 
-	public PresentationPanel(JustificationComputationServiceManager manager, OWLAxiom entailment) {
-		this(new PresentationManager(ProtegeManager.getInstance().getFrame(manager.getOWLEditorKit().getWorkspace()),
+	public PresentationPanel(JustificationComputationServiceManager<T> manager, OWLAxiom entailment) {
+		this(new PresentationManager<T>(ProtegeManager.getInstance().getFrame(manager.getOWLEditorKit().getWorkspace()),
 				manager, entailment));
 	}
 
-	public PresentationPanel(PresentationManager manager) {
+	public PresentationPanel(PresentationManager<T> manager) {
 		this.manager = manager;
 		this.kit = this.manager.getOWLEditorKit();
 		setLayout(new BorderLayout());

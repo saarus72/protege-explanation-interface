@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
-Bnd-LastModified: 1485876064816
+Bnd-LastModified: 1486344621629
 Build-Jdk: 1.8.0_102
 Built-By: Saa
 Bundle-ClassPath: .,target/dependency/owlexplanation-2.0.0.jar,target/de
@@ -30,18 +30,18 @@ Import-Package: com.google.common.collect;version="[18.0,19)",javax.swin
  org.protege.editor.owl.model;version="[5.0,6)",org.protege.editor.owl.m
  odel.event;version="[5.0,6)",org.protege.editor.owl.ui.editor;version="
  [5.0,6)",org.protege.editor.owl.ui.explanation;version="[5.0,6)",org.pr
- otege.editor.owl.ui.frame;version="[5.0,6)",org.protege.editor.owl.ui.f
- ramelist;version="[5.0,6)",org.semanticweb.owlapi.apibinding;version="[
- 4.2,5)",org.semanticweb.owlapi.dlsyntax.renderer;version="[4.2,5)",org.
- semanticweb.owlapi.formats;version="[4.2,5)",org.semanticweb.owlapi.io;
- version="[4.2,5)",org.semanticweb.owlapi.model;version="[4.2,5)",org.se
- manticweb.owlapi.model.parameters;version="[4.2,5)",org.semanticweb.owl
- api.owlxml.renderer;version="[4.2,5)",org.semanticweb.owlapi.rdf.rdfxml
- .renderer;version="[4.2,5)",org.semanticweb.owlapi.reasoner;version="[4
- .2,5)",org.semanticweb.owlapi.search;version="[4.2,5)",org.semanticweb.
- owlapi.util;version="[4.2,5)",org.slf4j;version="[1.7,2)",uk.ac.manches
- ter.cs.owl.explanation.ordering;version="[4.2,5)",uk.ac.manchester.cs.o
- wl.owlapi;version="[4.2,5)",uk.ac.manchester.cs.owlapi.modularity;versi
- on="[4.2,5)"
+ otege.editor.owl.ui.explanation.io;version="[5.0,6)",org.protege.editor
+ .owl.ui.frame;version="[5.0,6)",org.protege.editor.owl.ui.framelist;ver
+ sion="[5.0,6)",org.semanticweb.owlapi.apibinding;version="[4.2,5)",org.
+ semanticweb.owlapi.dlsyntax.renderer;version="[4.2,5)",org.semanticweb.
+ owlapi.formats;version="[4.2,5)",org.semanticweb.owlapi.io;version="[4.
+ 2,5)",org.semanticweb.owlapi.model;version="[4.2,5)",org.semanticweb.ow
+ lapi.model.parameters;version="[4.2,5)",org.semanticweb.owlapi.owlxml.r
+ enderer;version="[4.2,5)",org.semanticweb.owlapi.rdf.rdfxml.renderer;ve
+ rsion="[4.2,5)",org.semanticweb.owlapi.reasoner;version="[4.2,5)",org.s
+ emanticweb.owlapi.search;version="[4.2,5)",org.semanticweb.owlapi.util;
+ version="[4.2,5)",org.slf4j;version="[1.7,2)",uk.ac.manchester.cs.owl.e
+ xplanation.ordering;version="[4.2,5)",uk.ac.manchester.cs.owl.owlapi;ve
+ rsion="[4.2,5)",uk.ac.manchester.cs.owlapi.modularity;version="[4.2,5)"
 Require-Capability: osgi.ee;filter:="(&(osgi.ee=JavaSE)(version=1.8))"
 Tool: Bnd-3.0.0.201509101326

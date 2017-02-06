@@ -1,13 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
-   <extension-point id="service" name="Explanation Logic" schema="schema/not.org.saa.protege.explanation.joint.service.exsd"/>
+   <extension-point id="JustificationService" name="Justification Service" schema="schema/JustificationService.exsd"/>
+   <extension-point id="InconsistentOntologyJustificationService" name="Inconsistent Ontology Justification Service" schema="schema/InconsistentOntologyJustificationService.exsd"/>
    <extension id="PresentationService" point="org.protege.editor.owl.explanation">
       <name
             value="Presentation Service">
       </name>
       <class
             value="not.org.saa.protege.explanation.joint.PresentationService">
+      </class>
+   </extension>
+   <extension
+         id="InconsistentOntologyPresentationService"
+         point="org.protege.editor.owl.inconsistentOntologyExplanation">
+      <name
+            value="Inconsistent Ontology Presentation Service">
+      </name>
+      <class
+            value="not.org.saa.protege.explanation.joint.InconsistentOntologyPresentationService">
       </class>
    </extension>
 </plugin>

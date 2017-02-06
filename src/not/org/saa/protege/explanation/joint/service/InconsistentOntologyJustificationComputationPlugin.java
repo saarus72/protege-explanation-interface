@@ -4,14 +4,14 @@ import org.eclipse.core.runtime.IExtension;
 import org.protege.editor.core.plugin.AbstractProtegePlugin;
 import org.protege.editor.owl.OWLEditorKit;
 
-public class LogicPlugin extends AbstractProtegePlugin<JustificationComputationService> {
+public class InconsistentOntologyJustificationComputationPlugin extends AbstractProtegePlugin<InconsistentOntologyJustificationComputationService> {
 	public static final String KEY = "not.org.saa.protege.explanation.joint";
-	public static final String ID = "service";
+	public static final String ID = "InconsistentOntologyJustificationService";
 	public static final String NAME = "name";
 
 	private final OWLEditorKit kit;
 
-	public LogicPlugin(OWLEditorKit kit, IExtension extension) {
+	public InconsistentOntologyJustificationComputationPlugin(OWLEditorKit kit, IExtension extension) {
 		super(extension);
 		this.kit = kit;
 	}
@@ -21,8 +21,8 @@ public class LogicPlugin extends AbstractProtegePlugin<JustificationComputationS
 	}
 
 	@Override
-	public JustificationComputationService newInstance()
+	public InconsistentOntologyJustificationComputationService newInstance()
 			throws ClassNotFoundException, IllegalAccessException, InstantiationException {
-		return super.newInstance().setup(kit);
+		return super.newInstance().stp(kit);
 	}
 }

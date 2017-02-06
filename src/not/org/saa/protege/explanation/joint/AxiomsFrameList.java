@@ -12,6 +12,7 @@ import java.text.AttributedString;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -175,7 +176,8 @@ public class AxiomsFrameList extends OWLFrameList<Explanation<OWLAxiom>> {
 					return Color.YELLOW;
 				} else {
 					boolean inAll = true;
-					for (Explanation<?> expl : manager.getAxioms(getRootObject().getEntailment())) {
+					Set<Explanation<?>> s = manager.getAxioms(getRootObject().getEntailment());
+					for (Explanation<?> expl : s) {
 						if (!expl.contains(axiom)) {
 							inAll = false;
 							break;

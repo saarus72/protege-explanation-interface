@@ -9,12 +9,12 @@ import not.org.saa.protege.explanation.joint.service.JustificationComputationSer
 
 public class PresentationService extends ExplanationService {
 
-	private JustificationComputationServiceManager manager;
+	private JustificationComputationServiceManager<JustificationComputationService> manager;
 
 	@Override
 	public void initialise() throws Exception {
 		OWLEditorKit kit = getOWLEditorKit();
-		manager = new JustificationComputationServiceManager(kit);
+		manager = new JustificationComputationServiceManager<JustificationComputationService>(kit, "not.org.saa.protege.explanation.joint", "JustificationService");
 	}
 
 	@Override
@@ -27,7 +27,7 @@ public class PresentationService extends ExplanationService {
 
 	@Override
 	public ExplanationResult explain(OWLAxiom axiom) {
-		PresentationPanel panel = new PresentationPanel(manager, axiom);
+		PresentationPanel<JustificationComputationService> panel = new PresentationPanel<JustificationComputationService>(manager, axiom);
 		return new PresentationPanelResult(panel);
 	}
 
