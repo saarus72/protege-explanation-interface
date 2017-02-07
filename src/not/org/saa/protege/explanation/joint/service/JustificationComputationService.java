@@ -1,26 +1,21 @@
 package not.org.saa.protege.explanation.joint.service;
 
-import org.protege.editor.core.plugin.ProtegePluginInstance;
-import org.protege.editor.owl.OWLEditorKit;
 import org.semanticweb.owlapi.model.OWLAxiom;
 
-public abstract class JustificationComputationService implements ComputationService {
+/**
+ * A skeleton for a plugin that can provide justification based explanation for
+ * OWL axioms
+ */
 
-	//public abstract JustificationComputation creareComputation(OWLAxiom entailment);
-	
-	public abstract boolean hasAxioms(OWLAxiom entailment);
+public abstract class JustificationComputationService extends ComputationService {
 
-	private OWLEditorKit kit;
-
-	public OWLEditorKit getOWLEditorKit() {
-		return kit;
-	}
-	
-	@Override
-	public JustificationComputationService stp(OWLEditorKit kit) {
-		this.kit = kit;
-		return this;
-	}
+	/**
+	 * To define whether the plugin can provide us with a justification for the axiom
+	 * 
+	 * @param entailment	an entailment to compute justification for
+	 * @return	whether the plugin able to compute a justification for the axiom or not
+	 */
+	public abstract boolean hasAxioms(OWLAxiom entailment); ///!!!
 
 	@Override
 	public abstract void dispose();

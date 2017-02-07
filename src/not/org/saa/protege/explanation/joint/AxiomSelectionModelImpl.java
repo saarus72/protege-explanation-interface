@@ -6,9 +6,17 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.protege.editor.core.Disposable;
 import org.semanticweb.owlapi.model.OWLAxiom;
 
-public class AxiomSelectionModelImpl implements AxiomSelectionModel {
+/**
+ * Author: Matthew Horridge
+ * The University Of Manchester
+ * Information Management Group
+ * Date: 09-Oct-2008
+ */
+
+public class AxiomSelectionModelImpl implements AxiomSelectionModel, Disposable {
 
 	private Set<OWLAxiom> selectedAxioms;
 
@@ -53,5 +61,11 @@ public class AxiomSelectionModelImpl implements AxiomSelectionModel {
 
 	public void removeAxiomSelectionListener(AxiomSelectionListener lsnr) {
 		listeners.remove(lsnr);
+	}
+
+	@Override
+	public void dispose() {
+		while (listeners.size() != 0)
+			removeAxiomSelectionListener(listeners.get(0));
 	}
 }

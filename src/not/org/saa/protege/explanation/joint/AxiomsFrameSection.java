@@ -14,6 +14,13 @@ import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLObject;
 import org.semanticweb.owlapi.model.OWLOntology;
 
+/**
+ * Author: Matthew Horridge
+ * Stanford University
+ * Bio-Medical Informatics Research Group
+ * Date: 19/03/2012
+ */
+
 public class AxiomsFrameSection extends AbstractOWLFrameSection<Explanation<OWLAxiom>, OWLAxiom, OWLAxiom> {
 
 	private static String LABEL = "Explanation for: ";

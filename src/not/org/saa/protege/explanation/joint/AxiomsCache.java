@@ -9,6 +9,13 @@ import java.util.Set;
 import org.semanticweb.owl.explanation.api.Explanation;
 import org.semanticweb.owlapi.model.OWLAxiom;
 
+/**
+ * Author: Matthew Horridge
+ * Stanford University
+ * Bio-Medical Informatics Research Group
+ * Date: 20/03/2012
+ */
+
 public class AxiomsCache {
 	private Map<OWLAxiom, Set<Explanation<OWLAxiom>>> cache = new HashMap<>();
 

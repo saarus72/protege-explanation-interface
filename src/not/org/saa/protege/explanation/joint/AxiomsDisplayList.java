@@ -12,6 +12,13 @@ import javax.swing.border.Border;
 
 import org.protege.editor.core.Disposable;
 
+/**
+ * Author: Matthew Horridge
+ * The University Of Manchester
+ * Information Management Group
+ * Date: 19-Oct-2008
+ */
+
 public class AxiomsDisplayList extends JPanel implements Disposable {
 
 	private AxiomsDisplay display;

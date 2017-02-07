@@ -30,6 +30,13 @@ import org.protege.editor.owl.ui.framelist.OWLFrameListPopupMenuAction;
 import org.semanticweb.owl.explanation.api.Explanation;
 import org.semanticweb.owlapi.model.OWLAxiom;
 
+/**
+ * Author: Matthew Horridge
+ * Stanford University
+ * Bio-Medical Informatics Research Group
+ * Date: 19/03/2012
+ */
+
 public class AxiomsFrameList extends OWLFrameList<Explanation<OWLAxiom>> {
 
 	public static final Color SINGLE_POPULARITY_COLOR = new Color(170, 70, 15);

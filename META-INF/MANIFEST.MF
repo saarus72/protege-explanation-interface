@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
-Bnd-LastModified: 1486344621629
+Bnd-LastModified: 1486428414863
 Build-Jdk: 1.8.0_102
 Built-By: Saa
 Bundle-ClassPath: .,target/dependency/owlexplanation-2.0.0.jar,target/de

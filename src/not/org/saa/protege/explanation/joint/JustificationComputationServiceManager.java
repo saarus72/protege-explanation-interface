@@ -12,11 +12,20 @@ import not.org.saa.protege.explanation.joint.service.JustificationComputationPlu
 import not.org.saa.protege.explanation.joint.service.JustificationComputationPluginLoader;
 import not.org.saa.protege.explanation.joint.service.JustificationComputationService;
 
+/**
+ * Keeps track of the available specified {@link ComputationService} plugins.
+ * 
+ * @author Pavel Klinov pavel.klinov@uni-ulm.de
+ * 
+ * @author Yevgeny Kazakov
+ */
+
 public class JustificationComputationServiceManager<T extends ComputationService> implements Disposable {
 
 	private final OWLEditorKit kit;
 
 	private final Collection<T> services;
+	private T selectedService = null;
 
 	public JustificationComputationServiceManager(OWLEditorKit kit, String KEY, String ID) throws Exception {
 		this.kit = kit;
@@ -39,5 +48,13 @@ public class JustificationComputationServiceManager<T extends ComputationService
 
 	public Collection<T> getServices() {
 		return services;
+	}
+	
+	public T getSelectedService() {
+		return selectedService;
+	}
+	
+	public void selectService(T service) {
+		selectedService = service;
 	}
 }

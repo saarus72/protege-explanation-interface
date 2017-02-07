@@ -14,6 +14,13 @@ import javax.swing.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 
+/**
+ * Author: Matthew Horridge
+ * Stanford University
+ * Bio-Medical Informatics Research Group
+ * Date: 18/03/2012
+ */
+
 public class InconsistentOntologyPresentationService implements InconsistentOntologyPluginInstance {
 
 	private OWLEditorKit editorKit;
@@ -28,7 +35,6 @@ public class InconsistentOntologyPresentationService implements InconsistentOnto
 	public void initialise() throws Exception {
 		manager = new JustificationComputationServiceManager<InconsistentOntologyJustificationComputationService>(
 				editorKit, "not.org.saa.protege.explanation.joint", "InconsistentOntologyJustificationService");
-		// !!! does kit exist at this point? mb move the line to setup()
 	}
 
 	@Override

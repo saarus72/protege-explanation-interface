@@ -8,6 +8,7 @@ import java.awt.Insets;
 import java.awt.LayoutManager;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -22,6 +23,7 @@ import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
+import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -49,6 +51,15 @@ import org.slf4j.LoggerFactory;
 
 import not.org.saa.protege.explanation.joint.service.ComputationService;
 
+/**
+ * Author: Matthew Horridge
+ * The University Of Manchester
+ * Information Management Group
+ * Date: 04-Oct-2008
+ * 
+ * The component that displays a set of justification
+ */
+
 public class PresentationPanel<T extends ComputationService> extends JPanel implements Disposable, OWLModelManagerListener,
 		EntailmentSelectionListener, AxiomSelectionModel, ExplanationManagerListener {
 
@@ -71,6 +82,29 @@ public class PresentationPanel<T extends ComputationService> extends JPanel impl
 		this.manager = manager;
 		this.kit = this.manager.getOWLEditorKit();
 		setLayout(new BorderLayout());
+		
+		Collection<T> services = manager.getServices();
+		switch (services.size()) {
+		case 0:
+			break;
+		case 1:
+			manager.selectService(services.iterator().next());
+			break;
+		default:
+			JComboBox<T> selector = new JComboBox<T>();
+			for (T service : services)
+				selector.addItem(service);
+			selector.setSelectedItem(services.iterator().next());
+			manager.selectService(services.iterator().next());
+			selector.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					manager.selectService((T) selector.getSelectedItem());
+					refill();
+				}
+			});
+			add(selector, BorderLayout.NORTH);
+		}
 
 		selectionModel = new AxiomSelectionModelImpl();
 
@@ -270,6 +304,7 @@ public class PresentationPanel<T extends ComputationService> extends JPanel impl
 		for (AxiomsDisplay panel : panels) {
 			panel.dispose();
 		}
+		selectionModel.dispose();
 	}
 
 	public void handleChange(OWLModelManagerChangeEvent event) {

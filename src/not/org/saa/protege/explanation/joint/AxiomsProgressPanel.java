@@ -16,6 +16,13 @@ import javax.swing.SwingUtilities;
 
 import not.org.saa.protege.explanation.joint.service.JustificationComputation;
 
+/**
+ * Author: Matthew Horridge
+ * The University of Manchester
+ * Information Management Group
+ * Date: 14-Oct-2009
+ */
+
 public class AxiomsProgressPanel extends JPanel {
 
 	private JLabel messageLabel;
@@ -45,7 +52,6 @@ public class AxiomsProgressPanel extends JPanel {
 		progressPanel.add(progressBar, BorderLayout.SOUTH);
 		cancelAction = new AbstractAction("Stop searching") {
 			public void actionPerformed(ActionEvent e) {
-				//cancelled = true;
 				computation.interruptComputation();
 				setEnabled(false);
 			}

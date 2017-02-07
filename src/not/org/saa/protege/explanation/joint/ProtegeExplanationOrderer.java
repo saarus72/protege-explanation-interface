@@ -79,6 +79,14 @@ import uk.ac.manchester.cs.owl.explanation.ordering.ExplanationOrderer;
 import uk.ac.manchester.cs.owl.explanation.ordering.ExplanationTree;
 import uk.ac.manchester.cs.owl.explanation.ordering.Tree;
 
+/**
+ * Provides ordering and indenting of explanations based on various ordering
+ * heuristics.
+ *
+ * @author Matthew Horridge, The University Of Manchester, Bio-Health
+ *         Informatics Group, Date: 11-Jan-2008
+ */
+
 public class ProtegeExplanationOrderer implements ExplanationOrderer {
 
 	private Set<OWLAxiom> currentExplanation;

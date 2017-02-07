@@ -20,7 +20,7 @@ public class PresentationService extends ExplanationService {
 	@Override
 	public boolean hasExplanation(OWLAxiom axiom) {
 		for (JustificationComputationService service : manager.getServices())
-			if (service.hasAxioms(axiom))
+			if (service.hasAxioms(axiom)) //!!!
 				return true;
 		return false;
 	}

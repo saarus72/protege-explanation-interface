@@ -1,21 +1,18 @@
 package not.org.saa.protege.explanation.joint.service;
 
-import org.protege.editor.core.plugin.ProtegePluginInstance;
-import org.protege.editor.owl.OWLEditorKit;
-import org.semanticweb.owlapi.model.OWLAxiom;
+/**
+ * A skeleton for a plugin that can provide justification based explanation for
+ * inconsistent ontologies
+ * 
+ * Notes:
+ * 
+ * An entailment parameter in creareComputation function at ComputationService
+ * class is subClass(top, bottom).
+ * 
+ * Ontology to compute justification for could be obtained by using OWLEditorKit
+ * object.
+ */
 
-public abstract class InconsistentOntologyJustificationComputationService implements ComputationService {
+public abstract class InconsistentOntologyJustificationComputationService extends ComputationService {
 
-	//public abstract JustificationComputation creareComputation(OWLAxiom entailment);
-
-	private OWLEditorKit kit;
-
-	public OWLEditorKit getOWLEditorKit() {
-		return kit;
-	}
-
-	public InconsistentOntologyJustificationComputationService stp(OWLEditorKit kit) {
-		this.kit = kit;
-		return this;
-	}
 }

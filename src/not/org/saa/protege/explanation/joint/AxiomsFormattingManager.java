@@ -14,6 +14,13 @@ import uk.ac.manchester.cs.owl.explanation.ordering.ExplanationOrderer;
 import uk.ac.manchester.cs.owl.explanation.ordering.ExplanationTree;
 import uk.ac.manchester.cs.owl.explanation.ordering.Tree;
 
+/**
+ * Author: Matthew Horridge
+ * The University Of Manchester
+ * Information Management Group
+ * Date: 23-Oct-2008
+ */
+
 public class AxiomsFormattingManager {
 	static private AxiomsFormattingManager manager;
 

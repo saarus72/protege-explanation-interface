@@ -23,7 +23,15 @@ import org.semanticweb.owl.explanation.api.ExplanationGeneratorInterruptedExcept
 import not.org.saa.protege.explanation.joint.service.JustificationComputationListener;
 import not.org.saa.protege.explanation.joint.service.ComputationService;
 import not.org.saa.protege.explanation.joint.service.JustificationComputation;
-import not.org.saa.protege.explanation.joint.service.JustificationComputationService;
+
+/**
+ * Author: Matthew Horridge
+ * The University Of Manchester
+ * Information Management Group
+ * Date: 03-Oct-2008
+ * 
+ * Manages aspects of explanation in Protege 4.
+ */
 
 public class PresentationManager<T extends ComputationService> {
 
@@ -32,7 +40,6 @@ public class PresentationManager<T extends ComputationService> {
 
 	private final OWLAxiom entailment;
 	private final JustificationComputationServiceManager<T> manager;
-	private final Collection<T> services;
 	private final PresentationSettings presentationSettings;
 	private AxiomsCache axiomsCache;
 	private ExecutorService executorService;
@@ -43,7 +50,6 @@ public class PresentationManager<T extends ComputationService> {
 		this.entailment = entailment;
 		this.manager = manager;
 		this.parentWindow = parentWindow;
-		services = manager.getServices();
 		presentationSettings = new PresentationSettings();
 		axiomsCache = new AxiomsCache();
 		executorService = Executors.newSingleThreadExecutor();
@@ -52,7 +58,20 @@ public class PresentationManager<T extends ComputationService> {
 	public PresentationSettings getPresentationSettings() {
 		return presentationSettings;
 	}
-
+	
+	public Collection<T> getServices()
+	{
+		return manager.getServices();
+	}
+	
+	public void selectService(T service) {
+		manager.selectService(service);
+	}
+	
+	public T getSelectedService() {
+		return manager.getSelectedService();
+	}
+	
 	public OWLAxiom getEntailment() {
 		return entailment;
 	}
@@ -70,12 +89,12 @@ public class PresentationManager<T extends ComputationService> {
 	}
 
 	private Set<Explanation<OWLAxiom>> computeAxioms(OWLAxiom entailment) {
-		if (services.size() == 0)
+		if (getSelectedService() == null)
 			return null;
 		logger.info(LogBanner.start("Computing Explanations"));
 		logger.info(MARKER, "Computing explanations for {}", entailment);
-		ComputationService logic = services.iterator().next();
-		JustificationComputation computation = logic.creareComputation(entailment);
+		T logic = getSelectedService();
+		JustificationComputation computation = logic.createComputation(entailment);
 		ExplanationGeneratorProgressDialog progressDialog = new ExplanationGeneratorProgressDialog(parentWindow,
 				computation);
 

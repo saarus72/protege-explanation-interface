@@ -15,6 +15,13 @@ import org.semanticweb.owlapi.model.OWLAxiom;
 
 import not.org.saa.protege.explanation.joint.service.JustificationComputation;
 
+/**
+ * Author: Matthew Horridge
+ * Stanford University
+ * Bio-Medical Informatics Research Group
+ * Date: 20/03/2012
+ */
+
 public class ExplanationGeneratorProgressDialog extends JDialog {
 	private AxiomsProgressPanel panel;
 

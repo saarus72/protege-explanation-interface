@@ -1,5 +1,12 @@
 package not.org.saa.protege.explanation.joint;
 
+/**
+ * Author: Matthew Horridge
+ * Stanford University
+ * Bio-Medical Informatics Research Group
+ * Date: 20/03/2012
+ */
+
 public class PresentationSettings {
 
 	private int limit = 2;

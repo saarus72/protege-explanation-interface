@@ -12,6 +12,15 @@ import org.protege.editor.owl.OWLEditorKit;
 import org.semanticweb.owl.explanation.api.Explanation;
 import org.semanticweb.owlapi.model.OWLAxiom;
 
+/**
+ * Author: Matthew Horridge
+ * The University Of Manchester
+ * Information Management Group
+ * Date: 03-Oct-2008
+ *
+ * An interface to a component that can display justifications.
+ */
+
 public class AxiomsDisplay extends JPanel implements AxiomSelectionListener, Disposable {
 
 	private Explanation<OWLAxiom> explanation;

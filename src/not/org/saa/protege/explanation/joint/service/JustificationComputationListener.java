@@ -5,11 +5,16 @@ import java.util.List;
 
 import org.semanticweb.owlapi.model.OWLAxiom;
 
+/**
+ * Listener should be created to be provided with computed justifications
+ */
+
 public interface JustificationComputationListener {
+
 	/**
-     * Common words.
-     *
-     * @param explanation          More specific words.
-     */
+	 * Should be called when another justification is computed
+	 * 
+	 * @param justification	another justification for the axiom
+	 */
 	void foundJustification(Collection<OWLAxiom> justification);
 }
