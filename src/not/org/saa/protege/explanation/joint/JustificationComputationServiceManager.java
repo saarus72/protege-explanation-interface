@@ -10,7 +10,6 @@ import org.protege.editor.owl.OWLEditorKit;
 import not.org.saa.protege.explanation.joint.service.ComputationService;
 import not.org.saa.protege.explanation.joint.service.JustificationComputationPlugin;
 import not.org.saa.protege.explanation.joint.service.JustificationComputationPluginLoader;
-import not.org.saa.protege.explanation.joint.service.JustificationComputationService;
 
 /**
  * Keeps track of the available specified {@link ComputationService} plugins.
@@ -20,18 +19,18 @@ import not.org.saa.protege.explanation.joint.service.JustificationComputationSer
  * @author Yevgeny Kazakov
  */
 
-public class JustificationComputationServiceManager<T extends ComputationService> implements Disposable {
+public class JustificationComputationServiceManager implements Disposable {
 
 	private final OWLEditorKit kit;
 
-	private final Collection<T> services;
-	private T selectedService = null;
+	private final Collection<ComputationService> services;
+	private ComputationService selectedService = null;
 
 	public JustificationComputationServiceManager(OWLEditorKit kit, String KEY, String ID) throws Exception {
 		this.kit = kit;
-		this.services = new ArrayList<T>();
-		JustificationComputationPluginLoader<T> loader = new JustificationComputationPluginLoader<T>(this.kit, KEY, ID);
-		for (JustificationComputationPlugin<T> plugin : loader.getPlugins())
+		this.services = new ArrayList<ComputationService>();
+		JustificationComputationPluginLoader loader = new JustificationComputationPluginLoader(this.kit, KEY, ID);
+		for (JustificationComputationPlugin plugin : loader.getPlugins())
 			services.add(plugin.newInstance());
 	}
 
@@ -46,15 +45,15 @@ public class JustificationComputationServiceManager<T extends ComputationService
 		return kit;
 	}
 
-	public Collection<T> getServices() {
+	public Collection<ComputationService> getServices() {
 		return services;
 	}
 	
-	public T getSelectedService() {
+	public ComputationService getSelectedService() {
 		return selectedService;
 	}
 	
-	public void selectService(T service) {
+	public void selectService(ComputationService service) {
 		selectedService = service;
 	}
 }

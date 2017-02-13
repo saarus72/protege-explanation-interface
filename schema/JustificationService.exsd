@@ -44,7 +44,7 @@
                   
                </documentation>
                <appinfo>
-                  <meta.attribute kind="java" basedOn="not.org.saa.protege.explanation.joint.service.JustificationComputationService:"/>
+                  <meta.attribute kind="java" basedOn="not.org.saa.protege.explanation.joint.service.ComputationService:"/>
                </appinfo>
             </annotation>
          </attribute>

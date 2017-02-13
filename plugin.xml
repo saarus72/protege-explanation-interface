@@ -2,7 +2,6 @@
 <?eclipse version="3.4"?>
 <plugin>
    <extension-point id="JustificationService" name="Justification Service" schema="schema/JustificationService.exsd"/>
-   <extension-point id="InconsistentOntologyJustificationService" name="Inconsistent Ontology Justification Service" schema="schema/InconsistentOntologyJustificationService.exsd"/>
    <extension id="PresentationService" point="org.protege.editor.owl.explanation">
       <name
             value="Presentation Service">

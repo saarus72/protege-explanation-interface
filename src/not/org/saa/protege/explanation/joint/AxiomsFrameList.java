@@ -183,8 +183,7 @@ public class AxiomsFrameList extends OWLFrameList<Explanation<OWLAxiom>> {
 					return Color.YELLOW;
 				} else {
 					boolean inAll = true;
-					Set<Explanation<?>> s = manager.getAxioms(getRootObject().getEntailment());
-					for (Explanation<?> expl : s) {
+					for (Explanation<?> expl : manager.getJustifications(getRootObject().getEntailment())) {
 						if (!expl.contains(axiom)) {
 							inAll = false;
 							break;

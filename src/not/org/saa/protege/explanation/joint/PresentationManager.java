@@ -13,6 +13,8 @@ import javax.swing.*;
 import org.protege.editor.core.log.LogBanner;
 import org.protege.editor.owl.OWLEditorKit;
 import org.semanticweb.owlapi.model.OWLAxiom;
+import org.semanticweb.owlapi.model.OWLDataFactory;
+import org.semanticweb.owlapi.model.OWLSubClassOfAxiom;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Marker;
@@ -29,23 +31,21 @@ import not.org.saa.protege.explanation.joint.service.JustificationComputation;
  * The University Of Manchester
  * Information Management Group
  * Date: 03-Oct-2008
- * 
- * Manages aspects of explanation in Protege 4.
  */
 
-public class PresentationManager<T extends ComputationService> {
+public class PresentationManager {
 
 	private static final Logger logger = LoggerFactory.getLogger(PresentationManager.class);
 	public static final Marker MARKER = MarkerFactory.getMarker("Explanation");
 
 	private final OWLAxiom entailment;
-	private final JustificationComputationServiceManager<T> manager;
+	private final JustificationComputationServiceManager manager;
 	private final PresentationSettings presentationSettings;
 	private AxiomsCache axiomsCache;
 	private ExecutorService executorService;
 	private JFrame parentWindow;
 
-	public PresentationManager(JFrame parentWindow, JustificationComputationServiceManager<T> manager,
+	public PresentationManager(JFrame parentWindow, JustificationComputationServiceManager manager,
 			OWLAxiom entailment) {
 		this.entailment = entailment;
 		this.manager = manager;
@@ -59,16 +59,16 @@ public class PresentationManager<T extends ComputationService> {
 		return presentationSettings;
 	}
 	
-	public Collection<T> getServices()
+	public Collection<ComputationService> getServices()
 	{
 		return manager.getServices();
 	}
 	
-	public void selectService(T service) {
+	public void selectService(ComputationService service) {
 		manager.selectService(service);
 	}
 	
-	public T getSelectedService() {
+	public ComputationService getSelectedService() {
 		return manager.getSelectedService();
 	}
 	
@@ -76,25 +76,32 @@ public class PresentationManager<T extends ComputationService> {
 		return entailment;
 	}
 
-	public Set<Explanation<OWLAxiom>> getAxioms() {
-		return getAxioms(entailment);
+	public Set<Explanation<OWLAxiom>> getJustifications() {
+		return getJustifications(entailment);
 	}
 
-	public Set<Explanation<OWLAxiom>> getAxioms(OWLAxiom entailment) {
+	public Set<Explanation<OWLAxiom>> getJustifications(OWLAxiom entailment) {
 		if (!axiomsCache.contains(entailment)) {
-			Set<Explanation<OWLAxiom>> expls = computeAxioms(entailment);
+			Set<Explanation<OWLAxiom>> expls = computeJustifications(entailment);
 			axiomsCache.put(expls);
 		}
 		return axiomsCache.get(entailment);
 	}
 
-	private Set<Explanation<OWLAxiom>> computeAxioms(OWLAxiom entailment) {
+	private Set<Explanation<OWLAxiom>> computeJustifications(OWLAxiom entailment) {
 		if (getSelectedService() == null)
 			return null;
 		logger.info(LogBanner.start("Computing Explanations"));
 		logger.info(MARKER, "Computing explanations for {}", entailment);
-		T logic = getSelectedService();
-		JustificationComputation computation = logic.createComputation(entailment);
+		ComputationService service = getSelectedService();
+		
+		OWLDataFactory df = manager.getOWLEditorKit().getOWLModelManager().getOWLDataFactory();
+		OWLSubClassOfAxiom impossibleAxiom = df.getOWLSubClassOfAxiom(df.getOWLThing(), df.getOWLNothing());
+
+		JustificationComputation computation = (entailment.equalsIgnoreAnnotations(impossibleAxiom))
+				? service.createInconsistentOntologyJustificationComputation()
+				: service.createJustificationComputation(entailment);
+
 		ExplanationGeneratorProgressDialog progressDialog = new ExplanationGeneratorProgressDialog(parentWindow,
 				computation);
 
@@ -123,7 +130,7 @@ public class PresentationManager<T extends ComputationService> {
 
 	public int getPopularity(OWLAxiom axiom) {
 		int count = 0;
-		Set<Explanation<OWLAxiom>> justifications = getAxioms(entailment);
+		Set<Explanation<OWLAxiom>> justifications = getJustifications(entailment);
 		for (Explanation<OWLAxiom> justification : justifications) {
 			if (justification.contains(axiom)) {
 				count++;

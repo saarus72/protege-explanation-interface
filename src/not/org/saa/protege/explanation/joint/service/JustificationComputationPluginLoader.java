@@ -10,7 +10,7 @@ import org.protege.editor.owl.OWLEditorKit;
  * @param <T>	service which is based on ComputationService
  */
 
-public class JustificationComputationPluginLoader<T extends ComputationService> extends AbstractPluginLoader<JustificationComputationPlugin<T>> {
+public class JustificationComputationPluginLoader extends AbstractPluginLoader<JustificationComputationPlugin> {
 	
 	private final OWLEditorKit kit;
 
@@ -27,7 +27,7 @@ public class JustificationComputationPluginLoader<T extends ComputationService> 
 	}
 
 	@Override
-	protected JustificationComputationPlugin<T> createInstance(IExtension extension) {
-		return new JustificationComputationPlugin<T>(kit, extension);
+	protected JustificationComputationPlugin createInstance(IExtension extension) {
+		return new JustificationComputationPlugin(kit, extension);
 	}
 }

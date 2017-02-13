@@ -60,11 +60,11 @@ import not.org.saa.protege.explanation.joint.service.ComputationService;
  * The component that displays a set of justification
  */
 
-public class PresentationPanel<T extends ComputationService> extends JPanel implements Disposable, OWLModelManagerListener,
+public class PresentationPanel extends JPanel implements Disposable, OWLModelManagerListener,
 		EntailmentSelectionListener, AxiomSelectionModel, ExplanationManagerListener {
 
 	private final OWLEditorKit kit;
-	private final PresentationManager<T> manager;
+	private final PresentationManager manager;
 	private JComponent explanationDisplayHolder;
 	private JScrollPane scrollPane;
 	private Collection<AxiomsDisplay> panels;
@@ -73,17 +73,17 @@ public class PresentationPanel<T extends ComputationService> extends JPanel impl
 	private AxiomSelectionModelImpl selectionModel;
 	private static final Logger logger = LoggerFactory.getLogger(PresentationPanel.class);
 
-	public PresentationPanel(JustificationComputationServiceManager<T> manager, OWLAxiom entailment) {
-		this(new PresentationManager<T>(ProtegeManager.getInstance().getFrame(manager.getOWLEditorKit().getWorkspace()),
+	public PresentationPanel(JustificationComputationServiceManager manager, OWLAxiom entailment) {
+		this(new PresentationManager(ProtegeManager.getInstance().getFrame(manager.getOWLEditorKit().getWorkspace()),
 				manager, entailment));
 	}
 
-	public PresentationPanel(PresentationManager<T> manager) {
+	public PresentationPanel(PresentationManager manager) {
 		this.manager = manager;
 		this.kit = this.manager.getOWLEditorKit();
 		setLayout(new BorderLayout());
 		
-		Collection<T> services = manager.getServices();
+		Collection<ComputationService> services = manager.getServices();
 		switch (services.size()) {
 		case 0:
 			break;
@@ -91,15 +91,16 @@ public class PresentationPanel<T extends ComputationService> extends JPanel impl
 			manager.selectService(services.iterator().next());
 			break;
 		default:
-			JComboBox<T> selector = new JComboBox<T>();
-			for (T service : services)
-				selector.addItem(service);
+			JComboBox<ComputationService> selector = new JComboBox<ComputationService>();
+			for (ComputationService service : services)
+				if (service.canComputeJustification(manager.getEntailment()))
+					selector.addItem(service);
 			selector.setSelectedItem(services.iterator().next());
 			manager.selectService(services.iterator().next());
 			selector.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					manager.selectService((T) selector.getSelectedItem());
+					manager.selectService((ComputationService) selector.getSelectedItem());
 					refill();
 				}
 			});
@@ -245,7 +246,7 @@ public class PresentationPanel<T extends ComputationService> extends JPanel impl
 			explanationDisplayHolder.removeAll();
 			explanationDisplayHolder.validate();
 
-			List<Explanation<OWLAxiom>> lists = getOrderedExplanations(manager.getAxioms());
+			List<Explanation<OWLAxiom>> lists = getOrderedExplanations(manager.getJustifications());
 			PresentationSettings settings = manager.getPresentationSettings();
 
 			for (int i = 0; i < lists.size() && (settings.isFindAllExplanations() || i < settings.getLimit()); i++) {

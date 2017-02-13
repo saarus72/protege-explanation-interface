@@ -10,7 +10,7 @@ import org.protege.editor.owl.OWLEditorKit;
  * 
  * @param <T>	service which is based on ComputationService
  */
-public class JustificationComputationPlugin<T extends ComputationService> extends AbstractProtegePlugin<T> {
+public class JustificationComputationPlugin extends AbstractProtegePlugin<ComputationService> {
 	private final OWLEditorKit kit;
 
 	/**
@@ -25,8 +25,8 @@ public class JustificationComputationPlugin<T extends ComputationService> extend
 	}
 
 	@Override
-	public T newInstance()
+	public ComputationService newInstance()
 			throws ClassNotFoundException, IllegalAccessException, InstantiationException {
-		return (T) super.newInstance().stp(kit);
+		return super.newInstance().stp(kit);
 	}
 }
