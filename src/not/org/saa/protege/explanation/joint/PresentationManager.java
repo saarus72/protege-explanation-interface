@@ -24,6 +24,7 @@ import org.semanticweb.owl.explanation.api.ExplanationGeneratorInterruptedExcept
 
 import not.org.saa.protege.explanation.joint.service.JustificationComputationListener;
 import not.org.saa.protege.explanation.joint.service.ComputationService;
+import not.org.saa.protege.explanation.joint.service.ComputationServiceListener;
 import not.org.saa.protege.explanation.joint.service.JustificationComputation;
 
 /**
@@ -36,7 +37,7 @@ import not.org.saa.protege.explanation.joint.service.JustificationComputation;
 public class PresentationManager {
 
 	private static final Logger logger = LoggerFactory.getLogger(PresentationManager.class);
-	public static final Marker MARKER = MarkerFactory.getMarker("Explanation");
+	public static final Marker MARKER = MarkerFactory.getMarker("Presentation");
 
 	private final OWLAxiom entailment;
 	private final JustificationComputationServiceManager manager;
@@ -44,6 +45,7 @@ public class PresentationManager {
 	private AxiomsCache axiomsCache;
 	private ExecutorService executorService;
 	private JFrame parentWindow;
+	private ComputationServiceListener listener = null;
 
 	public PresentationManager(JFrame parentWindow, JustificationComputationServiceManager manager,
 			OWLAxiom entailment) {
@@ -55,6 +57,10 @@ public class PresentationManager {
 		executorService = Executors.newSingleThreadExecutor();
 	}
 
+	public void setComputationServiceListener (ComputationServiceListener listener) {
+		this.listener = listener;
+	}
+	
 	public PresentationSettings getPresentationSettings() {
 		return presentationSettings;
 	}
@@ -65,7 +71,14 @@ public class PresentationManager {
 	}
 	
 	public void selectService(ComputationService service) {
-		manager.selectService(service);
+		if (listener == null) {
+			manager.selectService(service);
+		} else {
+			if (manager.getSelectedService() != null)
+				manager.getSelectedService().removeListener(listener);
+			manager.selectService(service);
+			service.addListener(listener);
+		}
 	}
 	
 	public ComputationService getSelectedService() {
@@ -166,8 +179,7 @@ public class PresentationManager {
 		 * Computes a result, or throws an exception if unable to do so.
 		 * 
 		 * @return computed result
-		 * @throws Exception
-		 *             if unable to compute a result
+		 * @throws Exception if unable to compute a result
 		 */
 		public Set<Explanation<OWLAxiom>> call() throws Exception {
 			found = new HashSet<>();

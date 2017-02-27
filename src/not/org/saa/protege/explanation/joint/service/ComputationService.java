@@ -1,5 +1,10 @@
 package not.org.saa.protege.explanation.joint.service;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.swing.JPanel;
+
 import org.protege.editor.core.plugin.ProtegePluginInstance;
 import org.protege.editor.owl.OWLEditorKit;
 import org.protege.editor.owl.model.OWLModelManager;
@@ -70,5 +75,33 @@ public abstract class ComputationService implements ProtegePluginInstance {
 	ComputationService stp(OWLEditorKit kit) {
 		this.kit = kit;
 		return this;
+	}
+	
+	private List<ComputationServiceListener> listeners = new ArrayList<ComputationServiceListener>();
+	
+	public void addListener(ComputationServiceListener listener) {
+		listeners.add(listener);
+	}
+
+	public void removeListener(ComputationServiceListener listener) {
+		listeners.remove(listener);
+	}
+	
+	/**
+	 * Could Return visual control pane which will be displayed while the plugin is chosen
+	 * 
+	 * @return the panel to be displayed. Null if panel is not provided.
+	 */
+	public JPanel getSettingsPanel() {
+		return null;
+	}
+	
+	/**
+	 * Allows plugin to ask to re-display justification by calling this method.
+	 * When called, JustificationComputation will be requested again.
+	 */
+	public void settingsChanged() {
+		for (ComputationServiceListener listener : listeners)
+			listener.redrawingCalled();
 	}
 }

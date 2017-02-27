@@ -30,8 +30,11 @@ public class JustificationComputationServiceManager implements Disposable {
 		this.kit = kit;
 		this.services = new ArrayList<ComputationService>();
 		JustificationComputationPluginLoader loader = new JustificationComputationPluginLoader(this.kit, KEY, ID);
-		for (JustificationComputationPlugin plugin : loader.getPlugins())
-			services.add(plugin.newInstance());
+		for (JustificationComputationPlugin plugin : loader.getPlugins()) {
+			ComputationService service = plugin.newInstance();
+			service.initialise();
+			services.add(service);
+		}
 	}
 
 	@Override

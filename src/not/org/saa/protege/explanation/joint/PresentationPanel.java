@@ -26,6 +26,7 @@ import javax.swing.ButtonGroup;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
@@ -50,6 +51,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import not.org.saa.protege.explanation.joint.service.ComputationService;
+import not.org.saa.protege.explanation.joint.service.ComputationServiceListener;
 
 /**
  * Author: Matthew Horridge
@@ -61,11 +63,12 @@ import not.org.saa.protege.explanation.joint.service.ComputationService;
  */
 
 public class PresentationPanel extends JPanel implements Disposable, OWLModelManagerListener,
-		EntailmentSelectionListener, AxiomSelectionModel, ExplanationManagerListener {
+		EntailmentSelectionListener, AxiomSelectionModel, ExplanationManagerListener, ComputationServiceListener {
 
 	private final OWLEditorKit kit;
 	private final PresentationManager manager;
 	private JComponent explanationDisplayHolder;
+	private JComponent serviceSettingsDisplayHolder;
 	private JScrollPane scrollPane;
 	private Collection<AxiomsDisplay> panels;
 
@@ -80,6 +83,7 @@ public class PresentationPanel extends JPanel implements Disposable, OWLModelMan
 
 	public PresentationPanel(PresentationManager manager) {
 		this.manager = manager;
+		manager.setComputationServiceListener(this);
 		this.kit = this.manager.getOWLEditorKit();
 		setLayout(new BorderLayout());
 		
@@ -89,6 +93,8 @@ public class PresentationPanel extends JPanel implements Disposable, OWLModelMan
 			break;
 		case 1:
 			manager.selectService(services.iterator().next());
+			JLabel label = new JLabel("Using " + manager.getSelectedService() + " as a computation service");
+			add(label, BorderLayout.NORTH);
 			break;
 		default:
 			JComboBox<ComputationService> selector = new JComboBox<ComputationService>();
@@ -101,6 +107,7 @@ public class PresentationPanel extends JPanel implements Disposable, OWLModelMan
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					manager.selectService((ComputationService) selector.getSelectedItem());
+					updateSettingsPanel();
 					refill();
 				}
 			});
@@ -131,10 +138,14 @@ public class PresentationPanel extends JPanel implements Disposable, OWLModelMan
 		JPanel headerPanelHolder = new JPanel(new BorderLayout());
 		headerPanelHolder.add(headerPanel, BorderLayout.WEST);
 		explanationListPanel.add(headerPanelHolder, BorderLayout.NORTH);
+		
+		serviceSettingsDisplayHolder = new Box(BoxLayout.Y_AXIS);
+		explanationListPanel.add(serviceSettingsDisplayHolder, BorderLayout.NORTH);
 
 		rhsPanel.add(explanationListPanel);
 		add(rhsPanel);
 
+		updateSettingsPanel();
 		refill();
 	}
 
@@ -238,6 +249,20 @@ public class PresentationPanel extends JPanel implements Disposable, OWLModelMan
 
 	public void selectionChanged() {
 		refill();
+	}
+	
+
+	@Override
+	public void redrawingCalled() {
+		refill();
+	}
+	
+	private void updateSettingsPanel() {
+		JPanel settingsPanel = manager.getSelectedService().getSettingsPanel();
+		serviceSettingsDisplayHolder.removeAll();
+		if (settingsPanel != null)
+			serviceSettingsDisplayHolder.add(settingsPanel);
+		serviceSettingsDisplayHolder.validate();
 	}
 
 	private void refill() {
