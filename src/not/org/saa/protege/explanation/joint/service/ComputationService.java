@@ -77,14 +77,10 @@ public abstract class ComputationService implements ProtegePluginInstance {
 		return this;
 	}
 	
-	private List<ComputationServiceListener> listeners = new ArrayList<ComputationServiceListener>();
+	private ComputationServiceListener listener = null;
 	
-	public void addListener(ComputationServiceListener listener) {
-		listeners.add(listener);
-	}
-
-	public void removeListener(ComputationServiceListener listener) {
-		listeners.remove(listener);
+	void setListener(ComputationServiceListener listener) {
+		this.listener = listener;
 	}
 	
 	/**
@@ -101,7 +97,7 @@ public abstract class ComputationService implements ProtegePluginInstance {
 	 * When called, JustificationComputation will be requested again.
 	 */
 	public void settingsChanged() {
-		for (ComputationServiceListener listener : listeners)
+		if (listener != null)
 			listener.redrawingCalled();
 	}
 }

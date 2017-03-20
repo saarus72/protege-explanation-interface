@@ -4,7 +4,7 @@
    <extension-point id="JustificationService" name="Justification Service" schema="schema/JustificationService.exsd"/>
    <extension id="PresentationService" point="org.protege.editor.owl.explanation">
       <name
-            value="Presentation Service">
+            value="Justification Based Explanation">
       </name>
       <class
             value="not.org.saa.protege.explanation.joint.PresentationService">
@@ -14,7 +14,7 @@
          id="InconsistentOntologyPresentationService"
          point="org.protege.editor.owl.inconsistentOntologyExplanation">
       <name
-            value="Inconsistent Ontology Presentation Service">
+            value="Inconsistent Ontology Justification-Based Explanation">
       </name>
       <class
             value="not.org.saa.protege.explanation.joint.InconsistentOntologyPresentationService">

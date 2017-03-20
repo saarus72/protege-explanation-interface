@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
-Bnd-LastModified: 1488205515973
-Build-Jdk: 1.8.0_121
-Built-By: Alexander
+Bnd-LastModified: 1489707839066
+Build-Jdk: 1.8.0_102
+Built-By: Saa
 Bundle-ClassPath: .,target/dependency/owlexplanation-2.0.0.jar,target/de
  pendency/telemetry-2.0.0.jar
 Bundle-ManifestVersion: 2

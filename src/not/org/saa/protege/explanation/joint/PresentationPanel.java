@@ -30,11 +30,13 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
+import javax.swing.JSeparator;
 import javax.swing.JSpinner;
 import javax.swing.Scrollable;
 import javax.swing.SpinnerModel;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.Timer;
+import javax.swing.border.EmptyBorder;
 
 import org.protege.editor.core.Disposable;
 import org.protege.editor.core.ProtegeManager;
@@ -71,6 +73,8 @@ public class PresentationPanel extends JPanel implements Disposable, OWLModelMan
 	private JComponent serviceSettingsDisplayHolder;
 	private JScrollPane scrollPane;
 	private Collection<AxiomsDisplay> panels;
+	
+	private JPanel explanationListPanel;
 
 	private JSpinner maxExplanationsSelector = new JSpinner();
 	private AxiomSelectionModelImpl selectionModel;
@@ -98,16 +102,23 @@ public class PresentationPanel extends JPanel implements Disposable, OWLModelMan
 			break;
 		default:
 			JComboBox<ComputationService> selector = new JComboBox<ComputationService>();
+			ComputationService serviceToSelect = services.iterator().next();
 			for (ComputationService service : services)
 				if (service.canComputeJustification(manager.getEntailment()))
+				{
 					selector.addItem(service);
-			selector.setSelectedItem(services.iterator().next());
-			manager.selectService(services.iterator().next());
+					if (JustificationComputationServiceManager.lastChoosenServiceId == manager.getIdForService(service))
+						serviceToSelect = service;
+				}
+			selector.setSelectedItem(serviceToSelect);
+			manager.selectService(serviceToSelect);
 			selector.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					manager.selectService((ComputationService) selector.getSelectedItem());
 					updateSettingsPanel();
+					
+					manager.clearJustificationsCache();
 					refill();
 				}
 			});
@@ -119,8 +130,8 @@ public class PresentationPanel extends JPanel implements Disposable, OWLModelMan
 		panels = new ArrayList<>();
 
 		kit.getModelManager().addListener(this);
-		explanationDisplayHolder = new Box(BoxLayout.Y_AXIS);
 
+		explanationDisplayHolder = new Box(BoxLayout.Y_AXIS);
 		JPanel pan = new HolderPanel(new BorderLayout());
 		pan.add(explanationDisplayHolder, BorderLayout.NORTH);
 		scrollPane = new JScrollPane(pan);
@@ -128,20 +139,23 @@ public class PresentationPanel extends JPanel implements Disposable, OWLModelMan
 		scrollPane.getViewport().setOpaque(false);
 		scrollPane.getViewport().setBackground(null);
 		scrollPane.setOpaque(false);
-
 		JPanel rhsPanel = new JPanel(new BorderLayout(7, 7));
-		JPanel explanationListPanel = new JPanel(new BorderLayout());
+		explanationListPanel = new JPanel(new BorderLayout());
 		explanationListPanel.add(scrollPane);
 		explanationListPanel.setMinimumSize(new Dimension(10, 10));
-
 		JComponent headerPanel = createHeaderPanel();
 		JPanel headerPanelHolder = new JPanel(new BorderLayout());
 		headerPanelHolder.add(headerPanel, BorderLayout.WEST);
-		explanationListPanel.add(headerPanelHolder, BorderLayout.NORTH);
-		
-		serviceSettingsDisplayHolder = new Box(BoxLayout.Y_AXIS);
-		explanationListPanel.add(serviceSettingsDisplayHolder, BorderLayout.NORTH);
-
+		JPanel sSDHPanel = new JPanel(new BorderLayout());
+		JPanel p = new JPanel(new BorderLayout());
+		JSeparator sep = new JSeparator();
+		sep.setBorder(new EmptyBorder(2, 2, 2, 2));
+		p.add(sep, BorderLayout.NORTH);
+		p.add(headerPanelHolder);
+		sSDHPanel.add(p);
+		serviceSettingsDisplayHolder = new JPanel(new BorderLayout());
+		sSDHPanel.add(serviceSettingsDisplayHolder, BorderLayout.NORTH);
+		explanationListPanel.add(sSDHPanel, BorderLayout.NORTH);
 		rhsPanel.add(explanationListPanel);
 		add(rhsPanel);
 
@@ -154,7 +168,7 @@ public class PresentationPanel extends JPanel implements Disposable, OWLModelMan
 		GridBagLayout layout = new GridBagLayout();
 
 		JComponent headerPanel = new JPanel(layout);
-
+		
 		final PresentationSettings presentationSettings = manager.getPresentationSettings();
 
 		SpinnerModel spinnerModel = new SpinnerNumberModel(presentationSettings.getLimit(), 1, 900, 1);
@@ -187,22 +201,24 @@ public class PresentationPanel extends JPanel implements Disposable, OWLModelMan
 			computeMaxExplanationsRadioButton.setSelected(true);
 		}
 
-		headerPanel.add(computeAllExplanationsRadioButton, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0,
-				GridBagConstraints.NORTHEAST, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
-		headerPanel.add(computeMaxExplanationsRadioButton, new GridBagConstraints(1, 1, 1, 1, 0.0, 0.0,
-				GridBagConstraints.NORTHEAST, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
-
 		final Timer spinnerUpdateTimer = new Timer(800, e -> {
 			presentationSettings.setLimit((Integer) maxExplanationsSelector.getValue());
 			refill();
 		});
-
 		spinnerUpdateTimer.setRepeats(false);
+		maxExplanationsSelector.addChangeListener(e -> spinnerUpdateTimer.restart());
 
-		headerPanel.add(maxExplanationsSelector, new GridBagConstraints(1, 3, 1, 1, 0.0, 0.0,
+//		JSeparator sep = new JSeparator();
+//		
+//		headerPanel.add(sep, new GridBagConstraints(0, 0, 2, 1, 0.0, 0.0,
+//				GridBagConstraints.NORTHEAST, GridBagConstraints.HORIZONTAL, new Insets(2, 2, 2, 2), 0, 0));
+		headerPanel.add(computeAllExplanationsRadioButton, new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0,
+				GridBagConstraints.NORTHEAST, GridBagConstraints.HORIZONTAL, new Insets(2, 2, 2, 2), 0, 0));
+		headerPanel.add(computeMaxExplanationsRadioButton, new GridBagConstraints(1, 1, 1, 1, 0.0, 0.0,
+				GridBagConstraints.NORTHEAST, GridBagConstraints.HORIZONTAL, new Insets(2, 10, 2, 2), 0, 0));
+		headerPanel.add(maxExplanationsSelector, new GridBagConstraints(1, 2, 1, 1, 0.0, 0.0,
 				GridBagConstraints.NORTHEAST, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
 		maxExplanationsSelector.setBorder(BorderFactory.createEmptyBorder(0, 30, 0, 0));
-		maxExplanationsSelector.addChangeListener(e -> spinnerUpdateTimer.restart());
 
 		return headerPanel;
 	}
@@ -254,6 +270,7 @@ public class PresentationPanel extends JPanel implements Disposable, OWLModelMan
 
 	@Override
 	public void redrawingCalled() {
+		manager.clearJustificationsCache();
 		refill();
 	}
 	
@@ -261,8 +278,8 @@ public class PresentationPanel extends JPanel implements Disposable, OWLModelMan
 		JPanel settingsPanel = manager.getSelectedService().getSettingsPanel();
 		serviceSettingsDisplayHolder.removeAll();
 		if (settingsPanel != null)
-			serviceSettingsDisplayHolder.add(settingsPanel);
-		serviceSettingsDisplayHolder.validate();
+			serviceSettingsDisplayHolder.add(settingsPanel, BorderLayout.WEST);
+		explanationListPanel.validate();
 	}
 
 	private void refill() {

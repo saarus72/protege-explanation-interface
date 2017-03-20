@@ -2,6 +2,9 @@ package not.org.saa.protege.explanation.joint;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Dictionary;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.protege.editor.core.Disposable;
 import org.protege.editor.core.plugin.ProtegePluginInstance;
@@ -24,16 +27,20 @@ public class JustificationComputationServiceManager implements Disposable {
 	private final OWLEditorKit kit;
 
 	private final Collection<ComputationService> services;
+	private Map<ComputationService, String> serviceIds;
 	private ComputationService selectedService = null;
+	public static String lastChoosenServiceId = null;
 
 	public JustificationComputationServiceManager(OWLEditorKit kit, String KEY, String ID) throws Exception {
 		this.kit = kit;
 		this.services = new ArrayList<ComputationService>();
+		this.serviceIds = new HashMap<ComputationService, String>();
 		JustificationComputationPluginLoader loader = new JustificationComputationPluginLoader(this.kit, KEY, ID);
 		for (JustificationComputationPlugin plugin : loader.getPlugins()) {
 			ComputationService service = plugin.newInstance();
 			service.initialise();
 			services.add(service);
+			serviceIds.put(service, plugin.getIExtension().getUniqueIdentifier());
 		}
 	}
 
@@ -58,5 +65,11 @@ public class JustificationComputationServiceManager implements Disposable {
 	
 	public void selectService(ComputationService service) {
 		selectedService = service;
+		lastChoosenServiceId = getIdForService(service);
+	}
+	
+	public String getIdForService(ComputationService service)
+	{
+		return serviceIds.get(service);
 	}
 }

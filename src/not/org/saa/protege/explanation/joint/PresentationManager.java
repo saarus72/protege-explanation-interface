@@ -25,6 +25,7 @@ import org.semanticweb.owl.explanation.api.ExplanationGeneratorInterruptedExcept
 import not.org.saa.protege.explanation.joint.service.JustificationComputationListener;
 import not.org.saa.protege.explanation.joint.service.ComputationService;
 import not.org.saa.protege.explanation.joint.service.ComputationServiceListener;
+import not.org.saa.protege.explanation.joint.service.ComputationServiceListenerManager;
 import not.org.saa.protege.explanation.joint.service.JustificationComputation;
 
 /**
@@ -45,7 +46,8 @@ public class PresentationManager {
 	private AxiomsCache axiomsCache;
 	private ExecutorService executorService;
 	private JFrame parentWindow;
-	private ComputationServiceListener listener = null;
+	private ComputationServiceListenerManager listenerManager = null;
+	//private ComputationServiceListener listener = null;
 
 	public PresentationManager(JFrame parentWindow, JustificationComputationServiceManager manager,
 			OWLAxiom entailment) {
@@ -58,7 +60,8 @@ public class PresentationManager {
 	}
 
 	public void setComputationServiceListener (ComputationServiceListener listener) {
-		this.listener = listener;
+		//this.listener = listener;
+		listenerManager = new ComputationServiceListenerManager(listener, manager.getSelectedService());
 	}
 	
 	public PresentationSettings getPresentationSettings() {
@@ -71,14 +74,9 @@ public class PresentationManager {
 	}
 	
 	public void selectService(ComputationService service) {
-		if (listener == null) {
-			manager.selectService(service);
-		} else {
-			if (manager.getSelectedService() != null)
-				manager.getSelectedService().removeListener(listener);
-			manager.selectService(service);
-			service.addListener(listener);
-		}
+		if (listenerManager != null)
+			listenerManager.changeService(service);
+		manager.selectService(service);
 	}
 	
 	public ComputationService getSelectedService() {
@@ -154,6 +152,15 @@ public class PresentationManager {
 
 	public OWLEditorKit getOWLEditorKit() {
 		return manager.getOWLEditorKit();
+	}
+	
+	public void clearJustificationsCache() {
+		axiomsCache = new AxiomsCache();
+	}
+	
+	public String getIdForService(ComputationService service)
+	{
+		return manager.getIdForService(service);
 	}
 
 	private class ExplanationGeneratorCallable
