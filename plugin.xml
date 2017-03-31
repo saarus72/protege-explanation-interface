@@ -20,4 +20,14 @@
             value="not.org.saa.protege.explanation.joint.InconsistentOntologyPresentationService">
       </class>
    </extension>
+   <extension
+         id="JustificationPreferences"
+         point="org.protege.editor.core.application.preferencespanel">
+      <label
+            value="Justifications">
+      </label>
+      <class
+            value="not.org.saa.protege.explanation.joint.PresentationPreferencesPanel">
+      </class>
+   </extension>
 </plugin>

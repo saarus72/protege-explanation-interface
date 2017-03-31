@@ -23,7 +23,7 @@ import org.semanticweb.owlapi.model.OWLOntology;
 
 public class AxiomsFrameSection extends AbstractOWLFrameSection<Explanation<OWLAxiom>, OWLAxiom, OWLAxiom> {
 
-	private static String LABEL = "Explanation for: ";
+	private static String LABEL = "";
 
 	private boolean filled = false;
 
@@ -33,13 +33,15 @@ public class AxiomsFrameSection extends AbstractOWLFrameSection<Explanation<OWLA
 
 	@Override
 	public String getLabel() {
-		Explanation<OWLAxiom> explanation = getRootObject();
-		if (explanation == null) {
-			return "";
-		}
-		OWLModelManager modelManager = getOWLEditorKit().getOWLModelManager();
-		String rendering = modelManager.getRendering(explanation.getEntailment()).replaceAll("\\s+", " ");
-		return LABEL + rendering;
+//		Explanation<OWLAxiom> explanation = getRootObject();
+//		if (explanation == null) {
+//			return "";
+//		}
+//		OWLModelManager modelManager = getOWLEditorKit().getOWLModelManager();
+//		String rendering = modelManager.getRendering(explanation.getEntailment()).replaceAll("\\s+", " ");
+//		return LABEL + rendering;
+		
+		return LABEL;
 	}
 
 	@Override

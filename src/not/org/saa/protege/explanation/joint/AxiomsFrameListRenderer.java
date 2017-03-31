@@ -1,7 +1,23 @@
 package not.org.saa.protege.explanation.joint;
 
-import javax.swing.JList;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Insets;
 
+import javax.swing.BorderFactory;
+import javax.swing.DefaultListCellRenderer;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.ListCellRenderer;
+import javax.swing.SwingConstants;
+import javax.swing.border.Border;
+
+import org.protege.editor.core.ui.list.MList;
+import org.protege.editor.core.ui.list.MListItem;
+import org.protege.editor.core.ui.list.MListSectionHeader;
+import org.protege.editor.core.ui.list.RendererWithInsets;
 import org.protege.editor.owl.OWLEditorKit;
 import org.protege.editor.owl.ui.framelist.OWLFrameListRenderer;
 import org.semanticweb.owlapi.model.OWLObject;

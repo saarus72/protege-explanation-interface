@@ -16,12 +16,15 @@ import java.util.Set;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
+import javax.swing.DefaultListCellRenderer;
 import javax.swing.JList;
 import javax.swing.KeyStroke;
+import javax.swing.ListCellRenderer;
 import javax.swing.border.Border;
 
 import org.protege.editor.core.ui.list.MListButton;
 import org.protege.editor.core.ui.list.MListItem;
+import org.protege.editor.core.ui.list.MList.MListCellRenderer;
 import org.protege.editor.owl.OWLEditorKit;
 import org.protege.editor.owl.ui.frame.OWLFrame;
 import org.protege.editor.owl.ui.framelist.ExplainButton;
@@ -55,6 +58,11 @@ public class AxiomsFrameList extends OWLFrameList<Explanation<OWLAxiom>> {
 		OWLEditorKit kit = manager.getOWLEditorKit();
 		setWrap(false);
 		setCellRenderer(new AxiomsFrameListRenderer(kit));
+
+//		ListCellRenderer renderer = new DefaultListCellRenderer();
+//		AxiomsFrameListRenderer ren = new AxiomsFrameListRenderer(kit);
+//		ren.setContentRenderer(renderer);
+//		setCellRenderer(ren);
 
 		Action moveUpAction = new AbstractAction("Move up") {
 			public void actionPerformed(ActionEvent e) {

@@ -18,24 +18,17 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.ButtonGroup;
+import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
-import javax.swing.JSeparator;
-import javax.swing.JSpinner;
 import javax.swing.Scrollable;
-import javax.swing.SpinnerModel;
-import javax.swing.SpinnerNumberModel;
-import javax.swing.Timer;
+import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 
 import org.protege.editor.core.Disposable;
@@ -73,10 +66,11 @@ public class PresentationPanel extends JPanel implements Disposable, OWLModelMan
 	private JComponent serviceSettingsDisplayHolder;
 	private JScrollPane scrollPane;
 	private Collection<AxiomsDisplay> panels;
-	
-	private JPanel explanationListPanel;
+	private JComponent headerPanel;
 
-	private JSpinner maxExplanationsSelector = new JSpinner();
+	private List<Explanation<OWLAxiom>> lastExplanations;
+	private JButton bAdd;
+
 	private AxiomSelectionModelImpl selectionModel;
 	private static final Logger logger = LoggerFactory.getLogger(PresentationPanel.class);
 
@@ -89,8 +83,8 @@ public class PresentationPanel extends JPanel implements Disposable, OWLModelMan
 		this.manager = manager;
 		manager.setComputationServiceListener(this);
 		this.kit = this.manager.getOWLEditorKit();
-		setLayout(new BorderLayout());
-		
+		setLayout(new GridBagLayout());
+
 		Collection<ComputationService> services = manager.getServices();
 		switch (services.size()) {
 		case 0:
@@ -98,14 +92,14 @@ public class PresentationPanel extends JPanel implements Disposable, OWLModelMan
 		case 1:
 			manager.selectService(services.iterator().next());
 			JLabel label = new JLabel("Using " + manager.getSelectedService() + " as a computation service");
-			add(label, BorderLayout.NORTH);
+			add(label, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.NORTHEAST,
+					GridBagConstraints.HORIZONTAL, new Insets(2, 0, 2, 0), 0, 0));
 			break;
 		default:
 			JComboBox<ComputationService> selector = new JComboBox<ComputationService>();
 			ComputationService serviceToSelect = services.iterator().next();
 			for (ComputationService service : services)
-				if (service.canComputeJustification(manager.getEntailment()))
-				{
+				if (service.canComputeJustification(manager.getEntailment())) {
 					selector.addItem(service);
 					if (JustificationComputationServiceManager.lastChoosenServiceId == manager.getIdForService(service))
 						serviceToSelect = service;
@@ -117,110 +111,93 @@ public class PresentationPanel extends JPanel implements Disposable, OWLModelMan
 				public void actionPerformed(ActionEvent e) {
 					manager.selectService((ComputationService) selector.getSelectedItem());
 					updateSettingsPanel();
-					
 					manager.clearJustificationsCache();
-					refill();
+					createHeaderPanel();
+					recompute();
 				}
 			});
-			add(selector, BorderLayout.NORTH);
+			add(selector, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.NORTHEAST,
+					GridBagConstraints.HORIZONTAL, new Insets(2, 0, 2, 0), 0, 0));
 		}
 
 		selectionModel = new AxiomSelectionModelImpl();
-
 		panels = new ArrayList<>();
-
 		kit.getModelManager().addListener(this);
 
+		serviceSettingsDisplayHolder = new JPanel(new BorderLayout());
+		add(serviceSettingsDisplayHolder, new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0, GridBagConstraints.NORTHEAST,
+				GridBagConstraints.HORIZONTAL, new Insets(2, 0, 2, 0), 0, 0));
+
+		headerPanel = new JPanel(new BorderLayout());
+		createHeaderPanel();
 		explanationDisplayHolder = new Box(BoxLayout.Y_AXIS);
-		JPanel pan = new HolderPanel(new BorderLayout());
-		pan.add(explanationDisplayHolder, BorderLayout.NORTH);
-		scrollPane = new JScrollPane(pan);
+		JPanel panel = new JPanel();
+		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+		panel.add(explanationDisplayHolder);
+		panel.add(headerPanel);
+		JPanel holder = new HolderPanel(new BorderLayout());
+		holder.add(panel, BorderLayout.NORTH);
+		scrollPane = new JScrollPane(holder);
 		scrollPane.setBorder(null);
 		scrollPane.getViewport().setOpaque(false);
 		scrollPane.getViewport().setBackground(null);
 		scrollPane.setOpaque(false);
-		JPanel rhsPanel = new JPanel(new BorderLayout(7, 7));
-		explanationListPanel = new JPanel(new BorderLayout());
+		JPanel explanationListPanel = new JPanel(new BorderLayout());
 		explanationListPanel.add(scrollPane);
 		explanationListPanel.setMinimumSize(new Dimension(10, 10));
-		JComponent headerPanel = createHeaderPanel();
-		JPanel headerPanelHolder = new JPanel(new BorderLayout());
-		headerPanelHolder.add(headerPanel, BorderLayout.WEST);
-		JPanel sSDHPanel = new JPanel(new BorderLayout());
-		JPanel p = new JPanel(new BorderLayout());
-		JSeparator sep = new JSeparator();
-		sep.setBorder(new EmptyBorder(2, 2, 2, 2));
-		p.add(sep, BorderLayout.NORTH);
-		p.add(headerPanelHolder);
-		sSDHPanel.add(p);
-		serviceSettingsDisplayHolder = new JPanel(new BorderLayout());
-		sSDHPanel.add(serviceSettingsDisplayHolder, BorderLayout.NORTH);
-		explanationListPanel.add(sSDHPanel, BorderLayout.NORTH);
-		rhsPanel.add(explanationListPanel);
-		add(rhsPanel);
+		add(explanationListPanel, new GridBagConstraints(0, 2, 1, 1, 1.0, 1.0, GridBagConstraints.NORTHEAST,
+		GridBagConstraints.BOTH, new Insets(2, 0, 2, 0), 0, 0));
 
-		updateSettingsPanel();
-		refill();
+		recompute();
 	}
 
 	private JComponent createHeaderPanel() {
+		headerPanel.removeAll();
 
-		GridBagLayout layout = new GridBagLayout();
-
-		JComponent headerPanel = new JPanel(layout);
-		
-		final PresentationSettings presentationSettings = manager.getPresentationSettings();
-
-		SpinnerModel spinnerModel = new SpinnerNumberModel(presentationSettings.getLimit(), 1, 900, 1);
-		maxExplanationsSelector.setModel(spinnerModel);
-		maxExplanationsSelector.setEnabled(!presentationSettings.isFindAllExplanations());
-
-		final JRadioButton computeAllExplanationsRadioButton = new JRadioButton();
-		computeAllExplanationsRadioButton.setAction(new AbstractAction("All explanations") {
+		bAdd = new JButton(getIncrementString());
+		bAdd.setBorder(new CompoundBorder(bAdd.getBorder(), new EmptyBorder(5, 5, 5, 5)));
+		bAdd.setBorder(new CompoundBorder(new EmptyBorder(0, 0, 0, 5), bAdd.getBorder()));
+		headerPanel.add(bAdd);
+		bAdd.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
-				presentationSettings.setFindAllExplanations(computeAllExplanationsRadioButton.isSelected());
-				maxExplanationsSelector.setEnabled(!presentationSettings.isFindAllExplanations());
-				refill();
+				updatePanel(manager.getPresentationSettings().getIncrement());
 			}
 		});
-		final JRadioButton computeMaxExplanationsRadioButton = new JRadioButton();
-		computeMaxExplanationsRadioButton.setAction(new AbstractAction("Limit explanations to") {
-			public void actionPerformed(ActionEvent e) {
-				presentationSettings.setFindAllExplanations(false);
-				maxExplanationsSelector.setEnabled(!presentationSettings.isFindAllExplanations());
-				refill();
+		PresentationPreferencesPanel.addListener(new PresentationPreferencesPanel.PreferencesListener() {
+			@Override
+			public void valueChanged() {
+				bAdd.setText(getIncrementString());
 			}
 		});
-		ButtonGroup limitButtonGroup = new ButtonGroup();
-		limitButtonGroup.add(computeAllExplanationsRadioButton);
-		limitButtonGroup.add(computeMaxExplanationsRadioButton);
-
-		if (presentationSettings.isFindAllExplanations()) {
-			computeAllExplanationsRadioButton.setSelected(true);
-		} else {
-			computeMaxExplanationsRadioButton.setSelected(true);
-		}
-
-		final Timer spinnerUpdateTimer = new Timer(800, e -> {
-			presentationSettings.setLimit((Integer) maxExplanationsSelector.getValue());
-			refill();
-		});
-		spinnerUpdateTimer.setRepeats(false);
-		maxExplanationsSelector.addChangeListener(e -> spinnerUpdateTimer.restart());
-
-//		JSeparator sep = new JSeparator();
-//		
-//		headerPanel.add(sep, new GridBagConstraints(0, 0, 2, 1, 0.0, 0.0,
-//				GridBagConstraints.NORTHEAST, GridBagConstraints.HORIZONTAL, new Insets(2, 2, 2, 2), 0, 0));
-		headerPanel.add(computeAllExplanationsRadioButton, new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0,
-				GridBagConstraints.NORTHEAST, GridBagConstraints.HORIZONTAL, new Insets(2, 2, 2, 2), 0, 0));
-		headerPanel.add(computeMaxExplanationsRadioButton, new GridBagConstraints(1, 1, 1, 1, 0.0, 0.0,
-				GridBagConstraints.NORTHEAST, GridBagConstraints.HORIZONTAL, new Insets(2, 10, 2, 2), 0, 0));
-		headerPanel.add(maxExplanationsSelector, new GridBagConstraints(1, 2, 1, 1, 0.0, 0.0,
-				GridBagConstraints.NORTHEAST, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
-		maxExplanationsSelector.setBorder(BorderFactory.createEmptyBorder(0, 30, 0, 0));
 
 		return headerPanel;
+	}
+	
+	private String getIncrementString()
+	{
+		if (lastExplanations == null)
+			return "Show next " + manager.getPresentationSettings().getIncrement() + " justifications";
+		int inc = Math.min(manager.getPresentationSettings().getIncrement(),
+				lastExplanations.size() - manager.getPresentationSettings().getCurrentCount());
+		return "Show next " + inc + " justifications of " + lastExplanations.size() + " in total";
+	}
+
+	private void updateHeaderPanel() {
+		int current = manager.getPresentationSettings().getCurrentCount();
+		int all = lastExplanations.size();
+		
+		String sAll = lastExplanations.size() + " justification" + (all == 1 ? " is shown." : "s are shown.");
+
+		if (current != all) {
+			bAdd.setText(getIncrementString());
+			headerPanel.validate();
+		} else {
+			headerPanel.removeAll();
+			JLabel explanationsCountLabel = new JLabel("All " + sAll);
+			headerPanel.add(explanationsCountLabel, BorderLayout.CENTER);
+			headerPanel.validate();
+		}
 	}
 
 	public Dimension getMinimumSize() {
@@ -228,7 +205,6 @@ public class PresentationPanel extends JPanel implements Disposable, OWLModelMan
 	}
 
 	public void explanationLimitChanged(PresentationManager presentationManager) {
-		maxExplanationsSelector.setEnabled(!presentationManager.getPresentationSettings().isFindAllExplanations());
 		selectionChanged();
 	}
 
@@ -264,46 +240,60 @@ public class PresentationPanel extends JPanel implements Disposable, OWLModelMan
 	}
 
 	public void selectionChanged() {
-		refill();
+		recompute();
 	}
-	
 
 	@Override
 	public void redrawingCalled() {
 		manager.clearJustificationsCache();
-		refill();
+		recompute();
 	}
-	
+
 	private void updateSettingsPanel() {
 		JPanel settingsPanel = manager.getSelectedService().getSettingsPanel();
 		serviceSettingsDisplayHolder.removeAll();
 		if (settingsPanel != null)
 			serviceSettingsDisplayHolder.add(settingsPanel, BorderLayout.WEST);
-		explanationListPanel.validate();
+		serviceSettingsDisplayHolder.validate();
 	}
 
-	private void refill() {
+	private void recompute() {
 		try {
 			panels.forEach(AxiomsDisplay::dispose);
 			explanationDisplayHolder.removeAll();
 			explanationDisplayHolder.validate();
 
-			List<Explanation<OWLAxiom>> lists = getOrderedExplanations(manager.getJustifications());
-			PresentationSettings settings = manager.getPresentationSettings();
+			lastExplanations = getOrderedExplanations(manager.getJustifications());
+			manager.getPresentationSettings().setCurrentCount(0);
 
-			for (int i = 0; i < lists.size() && (settings.isFindAllExplanations() || i < settings.getLimit()); i++) {
-				Explanation<OWLAxiom> explanation = lists.get(i);
-				final AxiomsDisplay display = new AxiomsDisplay(manager, this, explanation);
-				AxiomsDisplayList displayList = new AxiomsDisplayList(display, i);
-				displayList.setBorder(BorderFactory.createEmptyBorder(2, 0, 10, 0));
-				explanationDisplayHolder.add(displayList);
-				panels.add(display);
-			}
-			explanationDisplayHolder.add(Box.createVerticalStrut(10));
-			scrollPane.validate();
+			updateHeaderPanel();
+
+			updatePanel(manager.getPresentationSettings().getInitialAmount());
 		} catch (ExplanationException e) {
 			logger.error("An error occurred whilst computing explanations: {}", e.getMessage(), e);
 		}
+	}
+
+	private void updatePanel() {
+		updatePanel(lastExplanations.size() - manager.getPresentationSettings().getCurrentCount());
+	}
+
+	private void updatePanel(int diff) {
+		PresentationSettings settings = manager.getPresentationSettings();
+		int maxCnt = Math.min(settings.getCurrentCount() + diff, lastExplanations.size());
+
+		for (int explNum = settings.getCurrentCount() + 1; explNum <= maxCnt; explNum++) {
+			Explanation<OWLAxiom> explanation = lastExplanations.get(explNum - 1);
+			final AxiomsDisplay display = new AxiomsDisplay(manager, this, explanation);
+			AxiomsDisplayList displayList = new AxiomsDisplayList(display, explNum);
+			displayList.setBorder(BorderFactory.createEmptyBorder(2, 0, 10, 0));
+			explanationDisplayHolder.add(displayList);
+			panels.add(display);
+		}
+		settings.setCurrentCount(maxCnt);
+		updateHeaderPanel();
+
+		scrollPane.validate();
 	}
 
 	protected List<Explanation<OWLAxiom>> getOrderedExplanations(Set<Explanation<OWLAxiom>> explanations) {

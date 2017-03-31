@@ -34,14 +34,12 @@ public class AxiomsDisplayList extends JPanel implements Disposable {
 		setLayout(new BorderLayout(2, 2));
 
 		JPanel headerPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-		JLabel label = new JLabel("Explanation " + explanationNumber);
+		JLabel label = new JLabel("Justification " + explanationNumber);
 		headerPanel.add(label);
 		add(headerPanel, BorderLayout.NORTH);
 
 		JPanel displayHolder = new JPanel(new BorderLayout());
-		Border marginBorder = BorderFactory.createEmptyBorder(0, 20, 0, 0);
-		Border lineBorder = BorderFactory.createLineBorder(Color.LIGHT_GRAY);
-		displayHolder.setBorder(BorderFactory.createCompoundBorder(marginBorder, lineBorder));
+		displayHolder.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
 		displayHolder.add((JComponent) display);
 		add(displayHolder);
 	}
