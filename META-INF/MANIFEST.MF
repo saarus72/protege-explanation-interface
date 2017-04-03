@@ -1,14 +1,21 @@
 Manifest-Version: 1.0
-Bnd-LastModified: 1490872409819
+Bnd-LastModified: 1491225258546
 Build-Jdk: 1.8.0_121
 Built-By: Alexander
 Bundle-ClassPath: .,target/dependency/owlexplanation-2.0.0.jar,target/de
  pendency/telemetry-2.0.0.jar
+Bundle-Description: This is a plug-in that adds justification-based expl
+ anation facilities to the Protege Desktop ontology editor. It registers
+  as an extension to the Protege explanation services and defines an ext
+ ension point using which justifications can be provided by other Proteg
+ e plug-ins. The main functionality of this plug-in is displaying a list
+  of these justifications in the user interface.
+Bundle-DocURL: http://liveontologies.org
 Bundle-ManifestVersion: 2
-Bundle-Name: protege-explanation-interface
-Bundle-SymbolicName: not.org.saa.protege.explanation.joint;singleton:=tr
- ue
-Bundle-Vendor: Saa
+Bundle-Name: Protege Justification Explanation
+Bundle-SymbolicName: org.liveontologies.protege.explanation.justificatio
+ n;singleton:=true
+Bundle-Vendor: Live Ontologies Project
 Bundle-Version: 0.0.1.SNAPSHOT
 Created-By: Apache Maven Bundle Plugin
 Embed-Dependency: *;scope=!provided;scope=compile|runtime;inline=false
@@ -17,33 +24,36 @@ Embed-Transitive: true
 Embedded-Artifacts: target/dependency/owlexplanation-2.0.0.jar;g="net.so
  urceforge.owlapi";a="owlexplanation";v="2.0.0",target/dependency/teleme
  try-2.0.0.jar;g="net.sourceforge.owlapi";a="telemetry";v="2.0.0"
-Export-Package: not.org.saa.protege.explanation.joint.service;uses:="jav
- ax.swing,org.eclipse.core.runtime,org.protege.editor.core.plugin,org.pr
- otege.editor.owl,org.semanticweb.owlapi.model";version="0.0.1"
+Export-Package: org.liveontologies.protege.explanation.justification.ser
+ vice;uses:="javax.swing,org.eclipse.core.runtime,org.protege.editor.cor
+ e.plugin,org.protege.editor.owl,org.semanticweb.owlapi.model";version="
+ 0.0.1"
 Import-Package: com.google.common.collect;version="[18.0,19)",javax.swin
- g,javax.swing.border,javax.swing.event,not.org.saa.protege.explanation.
- joint.service,org.eclipse.core.runtime;version="[3.4,4)";registry=split
- ,org.protege.editor.core;version="[5.0,6)",org.protege.editor.core.log;
- version="[5.0,6)",org.protege.editor.core.plugin;version="[5.0,6)",org.
- protege.editor.core.ui.list;version="[5.0,6)",org.protege.editor.core.u
- i.preferences;version="[5.0,6)",org.protege.editor.core.ui.workspace;ve
- rsion="[5.0,6)",org.protege.editor.owl;version="[5.0,6)",org.protege.ed
- itor.owl.model;version="[5.0,6)",org.protege.editor.owl.model.event;ver
- sion="[5.0,6)",org.protege.editor.owl.ui.editor;version="[5.0,6)",org.p
- rotege.editor.owl.ui.explanation;version="[5.0,6)",org.protege.editor.o
- wl.ui.explanation.io;version="[5.0,6)",org.protege.editor.owl.ui.frame;
- version="[5.0,6)",org.protege.editor.owl.ui.framelist;version="[5.0,6)"
- ,org.protege.editor.owl.ui.preferences;version="[5.0,6)",org.semanticwe
- b.owlapi.apibinding;version="[4.2,5)",org.semanticweb.owlapi.dlsyntax.r
- enderer;version="[4.2,5)",org.semanticweb.owlapi.formats;version="[4.2,
- 5)",org.semanticweb.owlapi.io;version="[4.2,5)",org.semanticweb.owlapi.
- model;version="[4.2,5)",org.semanticweb.owlapi.model.parameters;version
- ="[4.2,5)",org.semanticweb.owlapi.owlxml.renderer;version="[4.2,5)",org
- .semanticweb.owlapi.rdf.rdfxml.renderer;version="[4.2,5)",org.semanticw
- eb.owlapi.reasoner;version="[4.2,5)",org.semanticweb.owlapi.search;vers
- ion="[4.2,5)",org.semanticweb.owlapi.util;version="[4.2,5)",org.slf4j;v
- ersion="[1.7,2)",uk.ac.manchester.cs.owl.explanation.ordering;version="
- [4.2,5)",uk.ac.manchester.cs.owl.owlapi;version="[4.2,5)",uk.ac.manches
- ter.cs.owlapi.modularity;version="[4.2,5)"
+ g,javax.swing.border,javax.swing.event,org.eclipse.core.runtime;version
+ ="[3.4,4)";registry=split,org.liveontologies.protege.explanation.justif
+ ication.service,org.protege.editor.core;version="[5.0,6)",org.protege.e
+ ditor.core.log;version="[5.0,6)",org.protege.editor.core.plugin;version
+ ="[5.0,6)",org.protege.editor.core.ui.list;version="[5.0,6)",org.proteg
+ e.editor.core.ui.preferences;version="[5.0,6)",org.protege.editor.core.
+ ui.workspace;version="[5.0,6)",org.protege.editor.owl;version="[5.0,6)"
+ ,org.protege.editor.owl.model;version="[5.0,6)",org.protege.editor.owl.
+ model.event;version="[5.0,6)",org.protege.editor.owl.ui.editor;version=
+ "[5.0,6)",org.protege.editor.owl.ui.explanation;version="[5.0,6)",org.p
+ rotege.editor.owl.ui.explanation.io;version="[5.0,6)",org.protege.edito
+ r.owl.ui.frame;version="[5.0,6)",org.protege.editor.owl.ui.framelist;ve
+ rsion="[5.0,6)",org.protege.editor.owl.ui.preferences;version="[5.0,6)"
+ ,org.semanticweb.owlapi.apibinding;version="[4.2,5)",org.semanticweb.ow
+ lapi.dlsyntax.renderer;version="[4.2,5)",org.semanticweb.owlapi.formats
+ ;version="[4.2,5)",org.semanticweb.owlapi.io;version="[4.2,5)",org.sema
+ nticweb.owlapi.model;version="[4.2,5)",org.semanticweb.owlapi.model.par
+ ameters;version="[4.2,5)",org.semanticweb.owlapi.owlxml.renderer;versio
+ n="[4.2,5)",org.semanticweb.owlapi.rdf.rdfxml.renderer;version="[4.2,5)
+ ",org.semanticweb.owlapi.reasoner;version="[4.2,5)",org.semanticweb.owl
+ api.search;version="[4.2,5)",org.semanticweb.owlapi.util;version="[4.2,
+ 5)",org.slf4j;version="[1.7,2)",uk.ac.manchester.cs.owl.explanation.ord
+ ering;version="[4.2,5)",uk.ac.manchester.cs.owl.owlapi;version="[4.2,5)
+ ",uk.ac.manchester.cs.owlapi.modularity;version="[4.2,5)"
 Require-Capability: osgi.ee;filter:="(&(osgi.ee=JavaSE)(version=1.8))"
 Tool: Bnd-3.0.0.201509101326
+Update-Url: https://raw.githubusercontent.com/liveontologies/protege-jus
+ tification-explanation/release/p5.update.properties

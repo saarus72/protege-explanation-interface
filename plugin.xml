@@ -7,7 +7,7 @@
             value="Justification Based Explanation">
       </name>
       <class
-            value="not.org.saa.protege.explanation.joint.PresentationService">
+            value="org.liveontologies.protege.explanation.justification.PresentationService">
       </class>
    </extension>
    <extension
@@ -17,7 +17,7 @@
             value="Inconsistent Ontology Justification-Based Explanation">
       </name>
       <class
-            value="not.org.saa.protege.explanation.joint.InconsistentOntologyPresentationService">
+            value="org.liveontologies.protege.explanation.justification.InconsistentOntologyPresentationService">
       </class>
    </extension>
    <extension
@@ -27,7 +27,7 @@
             value="Justifications">
       </label>
       <class
-            value="not.org.saa.protege.explanation.joint.PresentationPreferencesPanel">
+            value="org.liveontologies.protege.explanation.justification.PresentationPreferencesPanel">
       </class>
    </extension>
 </plugin>

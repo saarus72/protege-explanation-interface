@@ -1,9 +1,9 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!-- Schema file written by PDE -->
-<schema targetNamespace="not.org.saa.protege.explanation.joint" xmlns="http://www.w3.org/2001/XMLSchema">
+<schema targetNamespace="org.liveontologies.protege.explanation.justification" xmlns="http://www.w3.org/2001/XMLSchema">
 <annotation>
       <appinfo>
-         <meta.schema plugin="not.org.saa.protege.explanation.joint" id="JustificationService" name="Justification Service"/>
+         <meta.schema plugin="org.liveontologies.protege.explanation.justification" id="JustificationService" name="Justification Service"/>
       </appinfo>
       <documentation>
          [Enter description of this extension point.]
@@ -44,7 +44,7 @@
                   
                </documentation>
                <appinfo>
-                  <meta.attribute kind="java" basedOn="not.org.saa.protege.explanation.joint.service.ComputationService:"/>
+                  <meta.attribute kind="java" basedOn="org.liveontologies.protege.explanation.justification.service.ComputationService:"/>
                </appinfo>
             </annotation>
          </attribute>
